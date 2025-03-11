@@ -141,11 +141,13 @@ void IsometricUnitMovementTestScene::SetupNavmesh()
 			CorneliusEngine::AStarPosition newPos;
 			newPos.position = currentPos;
 			m_navmesh.push_back(newPos);
+			
 		}
 	}
 
 	//Setup connections between all nodes.
 	for (int y = 0; y < m_gameGrid.GetEnvironmentTilemap()->GetHeight(); y++) {
+		Timer("Navmesh setup for row " + std::to_string(y));
 		for (int x = 0; x < m_gameGrid.GetEnvironmentTilemap()->GetWidth(); x++) {
 			Vector2Int currentPos(x, y);
 			int currentPosIndex = -1;

@@ -46,7 +46,7 @@ Vector2Int Renderer::Initialise(const std::string& a_appName, int a_screenWidth,
 		desiredHeight = displayMode.h;
 		CorneliusEngine::Log("Screen dimensions (from renderer init): (" + std::to_string(desiredWidth) + "," + std::to_string(desiredHeight) + ")");
 	}
-	int tileMult = 40;
+	int tileMult = 7;
 	m_isometricTileSize = Vector2Int(desiredHeight / tileMult, desiredHeight / tileMult);
 
 	//Initialise image handling library.

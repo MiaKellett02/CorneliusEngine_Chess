@@ -113,7 +113,7 @@ void IsometricUnitMovementTestScene::DoPathfinding()
 			m_gameGrid.GetEnvironmentTilemap()->GetTile(m_checkedPositions[i]).tint = blue;
 		}
 
-		Timer("Tint path timer");
+		//Timer("Tint path timer");
 		for (int i = 0; i < calculatedPath.size(); i++) {
 			m_gameGrid.GetEnvironmentTilemap()->GetTile(calculatedPath[i]).tint = red;
 		}
@@ -123,7 +123,7 @@ void IsometricUnitMovementTestScene::DoPathfinding()
 void IsometricUnitMovementTestScene::ResetNavmesh()
 {
 	if (!m_navmeshReset) {
-		Timer("Reset Navmesh Timer");
+		//Timer("Reset Navmesh Timer");
 		for (int i = 0; i < m_navmesh.size(); i++) {
 			m_navmesh[i].totalCostToStart = m_navmesh[i].START_COST;
 			m_navmesh[i].connectingNodeToStart = nullptr;
@@ -141,13 +141,13 @@ void IsometricUnitMovementTestScene::SetupNavmesh()
 			CorneliusEngine::AStarPosition newPos;
 			newPos.position = currentPos;
 			m_navmesh.push_back(newPos);
-			
+
 		}
 	}
 
 	//Setup connections between all nodes.
 	for (int y = 0; y < m_gameGrid.GetEnvironmentTilemap()->GetHeight(); y++) {
-		Timer("Navmesh setup for row " + std::to_string(y));
+		//Timer("Navmesh setup for row " + std::to_string(y));
 		for (int x = 0; x < m_gameGrid.GetEnvironmentTilemap()->GetWidth(); x++) {
 			Vector2Int currentPos(x, y);
 			int currentPosIndex = -1;
@@ -158,86 +158,162 @@ void IsometricUnitMovementTestScene::SetupNavmesh()
 				}
 			}
 
-			//Left hand side.
-			if (x > 0) {
-				Vector2Int leftPos(x - 1, y);
-				for (int i = 0; i < m_navmesh.size(); i++) {
+			//Create the connections.
+			////Left hand side.
+			//if (x > 0) {
+			//	if (y > 0) {
+			//		Vector2Int leftDownPos(int(x) - 1, int(y) - 1);
+			//		int range = leftDownPos.GetX() + leftDownPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+
+			//	if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight() - 1) {
+			//		Vector2Int leftUpPos(int(x) - 1, int(y) + 1);
+			//		int range = leftUpPos.GetX() + leftUpPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+
+			//	Vector2Int leftPos(int(x) - 1, int(y));
+			//	int range = leftPos.GetX() + leftPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//	if (range >= m_navmesh.size() || range < 0) {
+			//		CorneliusEngine::LogError("Out of bounds.");
+			//	}
+			//	CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//	m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//}
+
+			////Right hand side.
+			//if (x < m_gameGrid.GetEnvironmentTilemap()->GetWidth() - 1) {
+			//	if (y > 0) {
+			//		if (currentPosIndex == 89) {
+			//			int a = 0;
+			//		}
+			//		Vector2Int rightDownPos(int(x) + 1, int(y) - 1);
+			//		int range = rightDownPos.GetX() + rightDownPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+
+			//	if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight() - 1) {
+			//		Vector2Int rightUpPos(int(x) + 1, int(y) + 1);
+			//		int range = rightUpPos.GetX() + rightUpPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+
+			//	Vector2Int rightPos(int(x) + 1, int(y));
+			//	int range = rightPos.GetX() + rightPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//	if (range >= m_navmesh.size() || range < 0) {
+			//		CorneliusEngine::LogError("Out of bounds.");
+			//	}
+			//	CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//	m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//}
+
+			////Middle side.
+			//if (x < m_gameGrid.GetEnvironmentTilemap()->GetWidth() - 1 && x > 0) {
+			//	if (y > 0) {
+			//		Vector2Int downPos(int(x), int(y) - 1);
+			//		int range = downPos.GetX() + downPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+
+			//	if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight() - 1) {
+			//		Vector2Int upPos(int(x), int(y) + 1);
+			//		int range = upPos.GetX() + upPos.GetY() * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+			//		if (range >= m_navmesh.size() || range < 0) {
+			//			CorneliusEngine::LogError("Out of bounds.");
+			//		}
+			//		CorneliusEngine::AStarPosition* ptr = &m_navmesh[range];
+			//		m_navmesh[currentPosIndex].MakeConnection(ptr, 1);
+			//	}
+			//}
+
+			//Loop through the entire navmesh.
+			for (int i = 0; i < m_navmesh.size(); i++) {
+				//Left hand side.
+				if (x > 0) {
+					Vector2Int leftPos(x - 1, y);
 					if (m_navmesh[i].position == leftPos) {
 						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
 						break;
 					}
-				}
-			}
-			if (x > 0 && y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
-				Vector2Int leftUpPos(x - 1, y + 1);
-				for (int i = 0; i < m_navmesh.size(); i++) {
-					if (m_navmesh[i].position == leftUpPos) {
-						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
-						break;
+					if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
+						Vector2Int leftUpPos(x - 1, y + 1);
+						if (m_navmesh[i].position == leftUpPos) {
+							m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
+							break;
+						}
 					}
-				}
-			}
-			if (x > 0 && y > 0) {
-				Vector2Int leftDownPos(x - 1, y - 1);
-				for (int i = 0; i < m_navmesh.size(); i++) {
-					if (m_navmesh[i].position == leftDownPos) {
-						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
-						break;
-					}
-				}
-			}
-
-			//Right Hand Side.
-			if (x < m_gameGrid.GetEnvironmentTilemap()->GetWidth()) {
-				Vector2Int rightPos(x + 1, y);
-				for (int i = 0; i < m_navmesh.size(); i++) {
-					if (m_navmesh[i].position == rightPos) {
-						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
-						break;
-					}
-				}
-
-				if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
-					Vector2Int rightUpPos(x + 1, y + 1);
-					for (int i = 0; i < m_navmesh.size(); i++) {
-						if (m_navmesh[i].position == rightUpPos) {
+					if (y > 0) {
+						Vector2Int leftDownPos(x - 1, y - 1);
+						if (m_navmesh[i].position == leftDownPos) {
 							m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
 							break;
 						}
 					}
 				}
 
-				if (y > 0) {
-					Vector2Int rightDownPos(x + 1, y - 1);
-					for (int i = 0; i < m_navmesh.size(); i++) {
+				//Right Hand Side.
+				if (x < m_gameGrid.GetEnvironmentTilemap()->GetWidth()) {
+					Vector2Int rightPos(x + 1, y);
+					if (m_navmesh[i].position == rightPos) {
+						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
+						break;
+					}
+
+					if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
+						Vector2Int rightUpPos(x + 1, y + 1);
+						if (m_navmesh[i].position == rightUpPos) {
+							m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
+							break;
+						}
+					}
+
+					if (y > 0) {
+						Vector2Int rightDownPos(x + 1, y - 1);
 						if (m_navmesh[i].position == rightDownPos) {
 							m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
 							break;
 						}
 					}
 				}
-			}
 
-			//Middle side.
-			if (y > 0) {
-				Vector2Int downPos(x, y - 1);
-				for (int i = 0; i < m_navmesh.size(); i++) {
+				//Middle side.
+				if (y > 0) {
+					Vector2Int downPos(x, y - 1);
 					if (m_navmesh[i].position == downPos) {
 						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
 						break;
 					}
 				}
-			}
 
-			if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
-				Vector2Int upPos(x, y + 1);
-				for (int i = 0; i < m_navmesh.size(); i++) {
+				if (y < m_gameGrid.GetEnvironmentTilemap()->GetHeight()) {
+					Vector2Int upPos(x, y + 1);
 					if (m_navmesh[i].position == upPos) {
 						m_navmesh[currentPosIndex].MakeConnection(&m_navmesh[i], 1);
 						break;
 					}
 				}
-			}
+			} // End of navmesh loop.
 		}
 	}
 }

@@ -60,7 +60,7 @@ std::vector<Vector2Int> CorneliusEngine::AStarPathfinding::FindPath(CorneliusEng
 
 		/*for (int i = 0; i < priorityList.size(); i++) {
 			DjikstraPosition* node = priorityList[i];
-			
+
 		}*/
 
 		if (priorityList.size() > 0) {
@@ -120,8 +120,8 @@ std::vector<Vector2Int> CorneliusEngine::AStarPathfinding::FindPath(CorneliusEng
 	for (int i = 0; i < checkedPositions.size(); i++) {
 		outCheckedPositions.push_back(checkedPositions[i]->position);
 	}
-	std::string positionsCheckedString = std::to_string(checkedPositions.size()) + " positions checked.";
-	CorneliusEngine::Log(positionsCheckedString);
+	//std::string positionsCheckedString = std::to_string(checkedPositions.size()) + " positions checked.";
+	//CorneliusEngine::Log(positionsCheckedString);
 
 	//Return.
 	return pathToGoal;
@@ -167,13 +167,15 @@ void CorneliusEngine::AStarPathfinding::RemoveValue(AStarPosition* a_value, std:
 void CorneliusEngine::AStarPosition::MakeConnection(AStarPosition* a_newConnection, float a_movementCostMultiplier)
 {
 	//Check if the connection is already made, if not then make it.
-	if (!connections.contains(a_newConnection)) {
+	if (a_newConnection != nullptr && !connections.contains(a_newConnection)) {
 		//Make the connection.
 		connections[a_newConnection] = CalculateMovementCost(a_newConnection, a_movementCostMultiplier);
 	}
 
 	//Ensure the other Position connects back to this one.
-	//a_newConnection->MakeConnection(this, a_movementCostMultiplier);
+	//if (a_newConnection != nullptr && !a_newConnection->connections.contains(this)) {
+	//	a_newConnection->MakeConnection(this, a_movementCostMultiplier);
+	//}
 }
 
 float CorneliusEngine::AStarPosition::CalculateMovementCost(AStarPosition* a_other, float a_movementCostMultiplier)

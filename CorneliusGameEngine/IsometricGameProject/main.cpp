@@ -17,7 +17,7 @@ int main(int argc, char* argv)
 
 	//Create the desired scenes and run the program..
 	//Scene testScene("ArmyScene");
-	IsometricUnitMovementTestScene testScene("IsoTestScene", 100, 100, "resources/IsoFlatTile.png");
+	IsometricUnitMovementTestScene testScene("IsoTestScene", 5, 5, "resources/IsoFlatTile.png");
 	app.AddScene(&testScene);
 
 	app.RunApplication();

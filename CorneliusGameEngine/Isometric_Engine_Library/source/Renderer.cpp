@@ -60,7 +60,12 @@ Vector2Int Renderer::Initialise(const std::string& a_appName, int a_screenWidth,
 		m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_FULLSCREEN);
 	}
 	else {
-		m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_OPENGL);
+		if (a_runAtMonitorResolution) {
+			m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_BORDERLESS);
+		}
+		else {
+			m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_OPENGL);
+		}
 	}
 
 	//Ensure the window was correctly initialised.

@@ -7,6 +7,7 @@
 
 //Library includes.
 #include <string>
+#include <iostream>
 
 //Forward Declarations.
 class GameGrid;
@@ -15,8 +16,24 @@ class GameGrid;
 class IsometricUnitMovementTestScene : public Scene {
 public:
 	//Constructor and destructor.
-	IsometricUnitMovementTestScene(std::string a_sceneName, int a_tileMapWidth, int a_tileMapHeight, const std::string& a_defaultTileSprite) : Scene(a_sceneName) {
-		m_gameGrid = GameGrid(a_tileMapWidth, a_tileMapHeight, a_defaultTileSprite);
+	IsometricUnitMovementTestScene(std::string a_sceneName, const std::string& a_defaultTileSprite) : Scene(a_sceneName) {
+		
+		int terrainWidth = 8;			// 8x8 grid for a chess board.
+		int terrainHeight = 8;
+		/*std::cout << "Enter terrain width - minimum = 1 (in tiles): ";
+		while (!(std::cin >> terrainWidth) || terrainWidth < 1) {
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cout << "Invalid input for width. Please enter an integer and make sure the width is atleast 1 tile: ";
+		}
+		std::cout << "Enter terrain height - minimum = 1 (in tiles): ";
+		while (!(std::cin >> terrainHeight) || terrainHeight < 1) {
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::cout << "Invalid input for height. Please enter an integer and make sure the height is atleast 1 tile: ";
+		}*/
+
+		m_gameGrid = GameGrid(terrainWidth, terrainHeight, a_defaultTileSprite);
 	}
 	~IsometricUnitMovementTestScene();
 

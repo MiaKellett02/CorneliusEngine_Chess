@@ -15,7 +15,7 @@
 Application* Application::instance = nullptr;
 
 //Functions.
-void Application::SetupApplication(const std::string& a_appName, bool a_runAtMonitorResolution)
+void Application::StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution)
 {
 	CorneliusEngine::Log("Application setup called.");
 
@@ -36,6 +36,9 @@ void Application::SetupApplication(const std::string& a_appName, bool a_runAtMon
 
 void Application::RunApplication()
 {
+	//Ensure the application windows has been created.
+	//StartApplicationWindow(APP_NAME, RUN_AT_MONITOR_RESOLUTION);
+
 	//If the active scene is null then load the first one in the list of scenes.
 	if (m_activeScene == nullptr) {
 		assert(m_scenes.size() > 0); //Ensure there are always existing scenes.

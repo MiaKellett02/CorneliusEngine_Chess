@@ -13,7 +13,7 @@ int main(int argc, char* argv)
 	Vector2Int cameraPos = Vector2Int(app.SCREEN_WIDTH / 4, app.SCREEN_HEIGHT / 16);
 	app.GetRenderer().SetCameraOffset(cameraPos);
 
-		//Create the desired scenes.
+	//Create the desired scenes.
 	IsometricUnitMovementTestScene testScene("IsoTestScene", "resources/IsoFlatTile.png");
 
 	//Run the program..

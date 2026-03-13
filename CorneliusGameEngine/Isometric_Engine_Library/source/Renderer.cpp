@@ -99,16 +99,39 @@ void Renderer::Render(const std::vector<Entity*>& a_entitiesToRender)
 	//Ensure all entities are copied to the renderer.
 	for (int i = 0; i < a_entitiesToRender.size(); i++) {
 		Entity* entity = a_entitiesToRender[i]; //Get the entity.
-
-		//Construct the rect for it to be rendered in.
-		SDL_Rect renderRect;
-		renderRect.x = (int)entity->GetScreenPos().x + m_cameraOffset.x; //pos x
-		renderRect.y = (int)entity->GetScreenPos().y + m_cameraOffset.y; //pos y
-		renderRect.w = (int)entity->GetSize().x; //width
-		renderRect.h = (int)entity->GetSize().y; //height
+		if (!entity->IsRenderingEnabled()) {
+			continue; //Skip this entity if it is not enabled for rendering.
+		}
 
 		//Get the texture.
 		SDL_Texture* entityTexture = m_textureMap[entity->GetTexID()];
+		Colour& entityTint = entity->GetEntityTint();
+		Uint8 r = entityTint.r;
+		Uint8 g = entityTint.g;
+		Uint8 b = entityTint.b;
+		SDL_SetTextureColorMod(entityTexture, r, g, b);
+
+		//Construct the rect for it to be rendered in.
+		SDL_Rect renderRect;
+		if (entity->IsIsometricRenderingEnabled()) {
+			//Do isometric conversion for the entity's screen position.
+			Vector2Int entityPosInt = Vector2Int((int)entity->GetPosition().x, (int)entity->GetPosition().y);
+			Vector2Int ScreenPos = GetScreenPosFromIsometricCoords(entityPosInt) + m_cameraOffset;
+			renderRect.x = ScreenPos.x + (m_isometricTileSize.x / 200); //pos x
+			renderRect.y = ScreenPos.y + (m_isometricTileSize.y / 200); //pos y
+			//Use isometric tile size for the width and height to ensure the entity is rendered at the correct size for the isometric perspective.
+			renderRect.w = m_isometricTileSize.x;
+			renderRect.h = m_isometricTileSize.y;
+		}
+		else {
+			//Use the entity's screen position as is.
+			renderRect.x = (int)entity->GetScreenPos().x + m_cameraOffset.x; //pos x
+			renderRect.y = (int)entity->GetScreenPos().y + m_cameraOffset.y; //pos y
+			renderRect.w = (int)entity->GetSize().x; //width
+			renderRect.h = (int)entity->GetSize().y; //height
+		}
+
+		
 
 		//Render the entity.
 		SDL_RenderCopy(m_renderer, entityTexture, NULL, &renderRect);

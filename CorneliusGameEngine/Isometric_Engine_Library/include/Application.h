@@ -125,7 +125,9 @@ public:
 	void AddScene(Scene* a_newScene) { m_scenes.push_back(a_newScene); }
 	void LoadSceneByName(const std::string& a_sceneName);
 	void LoadSceneByIndex(const int& a_index);
-	Scene* GetActiveScene() { return m_activeScene; }
+	Scene* GetActiveScene() { 
+		return m_activeScene;
+	}
 
 	//Utility.
 	bool IsPositionOutOfBound(Vector2& a_pos);

@@ -60,6 +60,14 @@ void Entity::Update(double a_deltaTime)
 	}
 }
 
+void Entity::ChangeTexture(std::string a_newTextureFilepath)
+{
+	m_texID = a_newTextureFilepath;
+
+	//Ensure entity texture is created using entity tag rather than name.
+	Application::Instance()->GetRenderer().CreateTexture(m_texID, a_newTextureFilepath);
+}
+
 void Entity::SetPosition(Vector2 a_newPos)
 {
 	//Bounds check.

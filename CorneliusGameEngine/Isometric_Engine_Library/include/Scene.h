@@ -35,7 +35,9 @@ public:
 	//Entity handling functions.
 	Entity* GetEntityByName(const std::string& a_name);
 	std::vector<Entity*> GetEntitiesWithTag(const std::string& a_tag);
-	std::vector<Entity*>& GetAllEntities() { return m_gameEntities; }
+	std::vector<Entity*>& GetAllEntities() { 
+		return m_gameEntities;
+	}
 	void DestroyEntity(Entity* a_entityToDestroy);
 	void DestroyAllEntities();
 

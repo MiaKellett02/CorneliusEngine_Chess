@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="source\GameGrid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\MainChessScene.cpp" />
+    <ClCompile Include="source\ChessBoard.cpp" />
+    <ClCompile Include="source\ChessPieceRendererComponent.cpp" />
+    <ClCompile Include="src\MainChessScene.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\GameGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainChessScene.h" />
+    <ClInclude Include="include\ChessBoard.h" />
+    <ClInclude Include="include\ChessPiece.h" />
+    <ClInclude Include="include\ChessPieceRendererComponent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{0a9a603e-137f-4c79-9313-59a10632142a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{00f2afc5-ec1e-4d95-9a22-72fd4400a6ba}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

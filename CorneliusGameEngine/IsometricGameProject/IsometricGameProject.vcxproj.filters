@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\GameScenesSource">
-      <UniqueIdentifier>{a208038b-f68e-4d0b-8023-3ca0ef740205}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\GameScenesInclude">
-      <UniqueIdentifier>{0be1f81b-8731-4959-94f5-196543bebe36}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,7 +30,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\IsometricUnitMovementTestScene.h">
-      <Filter>Header Files\GameScenesInclude</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

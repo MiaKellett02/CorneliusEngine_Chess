@@ -24,6 +24,7 @@
     <ProjectGuid>{E68B543F-D0B9-474C-8FD6-16CA34EAEFB4}</ProjectGuid>
     <RootNamespace>ArmySimulationMiaKellett</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>SampleProjectUsingPathfinding</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -71,28 +72,28 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)source;$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\temp</IntDir>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)source;$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\temp</IntDir>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)source;$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\temp</IntDir>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\$(Platform);$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)include;$(SolutionDir)External\SDL2\include;$(SolutionDir)Isometric_Engine_Library\include;$(ProjectDir)include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)source;$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)</OutDir>
     <IntDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\temp</IntDir>

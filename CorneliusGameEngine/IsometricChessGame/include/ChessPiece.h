@@ -6,6 +6,17 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma once
 
+//Project includes.
+#include "Vector2.h"
+#include "Logging.h"
+
+//Library includes.
+#include <vector>
+
+//Forward declarations.
+class ChessBoard;
+
+//Class definition.
 class ChessPiece
 {
 public:
@@ -19,16 +30,18 @@ public:
 		QUEEN,
 		KING,
 	};
-	static enum PieceColour{
+	static enum PieceColour {
 		NO_COLOUR = -1,
 		WHITE,
 		BLACK,
 	};
 
 	//Constructor and destructor.
-	ChessPiece(PieceColour a_pieceColour, PieceType a_pieceType) {
+	ChessPiece(PieceColour a_pieceColour, PieceType a_pieceType, ChessBoard* a_chessBoard, Vector2Int a_piecePosition) {
 		//Default to no piece.
 		UpdatePiece(a_pieceColour, a_pieceType);
+		m_chessBoard = a_chessBoard;
+		m_piecePosition = Vector2Int(a_piecePosition.x, a_piecePosition.y);
 	}
 
 	//Public functions.
@@ -42,6 +55,8 @@ public:
 	PieceType& GetPieceType() { return m_pieceType; }
 	bool& GetIsHovered() { return m_isHovered; }
 
+	const std::vector<Vector2Int>& GetAllValidPieceMoves();
+
 	//Setters.
 	void SetPieceColour(PieceColour a_pieceColour) { m_pieceColour = a_pieceColour; }
 	void SetPieceType(PieceType a_pieceType) { m_pieceType = a_pieceType; }
@@ -51,4 +66,16 @@ private:
 	PieceColour m_pieceColour; // The colour of the piece (white or black).
 	PieceType m_pieceType; // The type of the piece (pawn, rook, knight, bishop, queen, king).
 	bool m_isHovered = false; // Whether the piece is currently being hovered over by the mouse cursor, used for rendering purposes.
+
+	Vector2Int m_piecePosition; // The position of the piece on the chess board, used for movement and interaction logic.
+
+	ChessBoard* m_chessBoard = nullptr; // A pointer to the chess board that this piece is on, used for accessing the game grid and other pieces on the board for movement and interaction logic.
+
+	//Private functions.
+	void CalculateValidMovesForPawn(std::vector<Vector2Int>& validMoves);
+	void CalculateValidMovesForRook(std::vector<Vector2Int>& validMoves);
+	void CalculateValidMovesForKnight(std::vector<Vector2Int>& validMoves);
+	void CalculateValidMovesForBishop(std::vector<Vector2Int>& validMoves);
+	void CalculateValidMovesForQueen(std::vector<Vector2Int>& validMoves);
+	void CalculateValidMovesForKing(std::vector<Vector2Int>& validMoves);
 };

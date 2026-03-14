@@ -2,15 +2,13 @@
 
 //Project includes.
 #include "Scene.h"
-#include "GameGrid.h"
-#include "AStarPathfinding.h"
+#include "Application.h"
 
 //Library includes.
 #include <string>
 #include <iostream>
 
 //Forward Declarations.
-class GameGrid;
 class ChessBoard;
 
 //Class defintion.
@@ -18,9 +16,12 @@ class MainChessScene : public Scene {
 public:
 	//Constructor and destructor.
 	MainChessScene(std::string a_sceneName, const std::string& a_defaultTileSprite) 
-		: Scene(a_sceneName),
-		  m_gameGrid(8, 8, a_defaultTileSprite) // <-- initialize here
+		: Scene(a_sceneName)
 	{
+		//Ensure the default tile sprite is loaded into the renderer & is cached for when we setup the chessboard.
+		Application::Instance()->GetRenderer().CreateTexture(a_defaultTileSprite, a_defaultTileSprite);
+		m_defaultTileSprite = a_defaultTileSprite;
+
 		//Ensure the chess piece textures are loaded into the renderer.
 		//Load the white pieces.
 		Application::Instance()->GetRenderer().CreateTexture("resources/WhitePawn.png", "resources/WhitePawn.png");
@@ -49,14 +50,10 @@ public:
 
 private:
 	//Private variabes.
-	GameGrid m_gameGrid;
-	ChessBoard* m_chessBoard;
 	bool m_firstFrame = true; // A flag to check if it's the first frame of the scene. This can be used to perform any setup that needs to happen after the scene is loaded, but before the first update.
+	ChessBoard* m_chessBoard = nullptr;
 
-	//Some variables to store the selected positions for pathfinding. If the position is (-1, -1), it is not selected.
-	const Vector2Int UNSELECTED_VALUE = Vector2Int(-1, -1);
-	Vector2Int selectedPosOne = UNSELECTED_VALUE;
-	Vector2Int selectedPosTwo = UNSELECTED_VALUE;
+	std::string m_defaultTileSprite = "";
 
 	//Private functions.
 };

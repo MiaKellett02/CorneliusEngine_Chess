@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\ChessPiece.cpp" />
     <ClCompile Include="source\ChessPieceRendererComponent.cpp" />
     <ClCompile Include="source\ChessBoard.cpp" />
     <ClCompile Include="source\MainChessScene.cpp" />

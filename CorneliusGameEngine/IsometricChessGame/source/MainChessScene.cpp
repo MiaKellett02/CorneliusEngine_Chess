@@ -10,10 +10,9 @@ MainChessScene::~MainChessScene()
 
 void MainChessScene::SetupScene()
 {
-	//Add the gamegrid tilemaps to the scene list to render.
-	m_sceneTilemaps.push_back(m_gameGrid.GetEnvironmentTilemap());
+	// Perform any setup for the scene here. This will be called when the scene is loaded, but before the first update.
 
-	//Initialize the chess board, which will add the pieces to the scene as entities.
+	// WE ARE DOING THE SCENE SETUP IN THE FIRST UPDATE INSTEAD OF HERE BECAUSE WE NEED TO WAIT FOR THE SCENE TO BE LOADED BEFORE WE CAN CREATE THE CHESS BOARD, WHICH IS AN ENTITY THAT NEEDS TO BE ADDED TO THE SCENE. IF WE TRIED TO CREATE THE CHESS BOARD HERE, IT WOULD NOT BE ADDED TO THE SCENE AND WOULD NOT BE UPDATED OR RENDERED.
 }
 
 void MainChessScene::UpdateScene(double a_deltaTime)
@@ -21,70 +20,22 @@ void MainChessScene::UpdateScene(double a_deltaTime)
 	if (m_firstFrame) {
 		m_firstFrame = false; // Set the flag to false after the first update.
 		//Perform any setup that needs to happen after the scene is loaded, but before the first update.
-		m_chessBoard = new ChessBoard();
+	//Initialize the chess board, which will add the pieces to the scene as entities.
+		m_chessBoard = new ChessBoard(m_defaultTileSprite);
+
+		//Add the gamegrid tilemaps to the scene list to render.
+		m_sceneTilemaps.push_back(m_chessBoard->GetGameGrid().GetEnvironmentTilemap());
 	}
 
 	Scene::UpdateScene(a_deltaTime); // Call the base scene update to ensure all entities in the scene are updated.
 
-	//Get the position of the mouse and use that to get the isometric coordinate it is hovering over..
-	Vector2Int mousePos = InputHandler::GetMousePosition();
-	Vector2Int mouseIsoPos = Application::Instance()->GetRenderer().GetIsometricGridPosFromScreenCoords(mousePos, true);
-	/*CorneliusEngine::Log(("IsoPos(" + std::to_string(mouseIsoPos.x) + ", " + std::to_string(mouseIsoPos.y) + ")") +
-						 (" MousePos(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")") +
-						 (" CamOffset(" + std::to_string(Application::Instance()->GetRenderer().GetCameraOffset().x) + ", " + std::to_string(Application::Instance()->GetRenderer().GetCameraOffset().y) + ")"));*/
-
-
-	//Check mouse button states.
-	bool leftButtonPressed = InputHandler::LeftMouseButtonPressed();
-	bool rightButtonPressed = InputHandler::RightMouseButtonPressed();
-	bool isValidPosition = m_gameGrid.GetEnvironmentTilemap()->IsValidPosition(mouseIsoPos);
-
-	//Find which position is being selected by the player. If the left mouse button is pressed, select the position. If the right mouse button is pressed, clear the selections.
-	if (leftButtonPressed && isValidPosition) {
-		if (selectedPosOne == UNSELECTED_VALUE) {
-			selectedPosOne = mouseIsoPos;
-		}
-		else if (selectedPosTwo == UNSELECTED_VALUE && !(selectedPosTwo == selectedPosOne)) {
-			selectedPosTwo = mouseIsoPos;
-		}
-	}
-	else if (rightButtonPressed) {
-		//Clear the selections
-		selectedPosOne = UNSELECTED_VALUE;
-		selectedPosTwo = UNSELECTED_VALUE;
-	}
-
-	//Loop over all the chess pieces and reset the hover state.
-	for (int x = 0; x < 8; x++) {
-		for (int y = 0; y < 8; y++) {
-			ChessPiece& piece = m_chessBoard->GetPieceAtPosition(x, y);
-			if (piece.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
-				piece.SetIsHovered(false);
-			}
-		}
-	}
-
-	//Tint the position the mouse is hovering over a dark grey if no position is currently selected.
-	if (selectedPosOne == UNSELECTED_VALUE && selectedPosTwo == UNSELECTED_VALUE) {
-		//Reset the colours of the grid.
-		m_gameGrid.ResetGridColours();
-
-		//Tint the hovered tile a darker grey.
-		if (isValidPosition) {
-			int tileIndex = mouseIsoPos.x + mouseIsoPos.y * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
-			Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint;
-			Colour hoverColour = Colour(originalColour.r / 3, originalColour.g / 3, originalColour.b / 3);
-			m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = hoverColour;
-
-			//Make the chess piece at this position (if there is one) also be tinted to indicate it is being hovered over.
-			ChessPiece& pieceAtHoverPos = m_chessBoard->GetPieceAtPosition(mouseIsoPos.x, mouseIsoPos.y);
-			if (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
-				pieceAtHoverPos.SetIsHovered(true);
-			}
-		}
-	}
+	m_chessBoard->UpdateChessBoard(a_deltaTime); // Update the chess board, which will handle any logic related to the chess pieces and their interactions.
 }
 
 void MainChessScene::ShutdownScene()
 {
+	m_firstFrame = true; // Reset the first frame flag for when this scene is loaded again in the future.
+
+	// Perform any cleanup for memory management. For example, if the chess board was allocated on the heap, it should be deleted here.
+	delete m_chessBoard;
 }

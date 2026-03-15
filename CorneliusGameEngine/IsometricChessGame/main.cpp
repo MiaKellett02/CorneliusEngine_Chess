@@ -15,6 +15,7 @@ int main(int argc, char* argv)
 
 	//Create the desired scenes.
 	MainChessScene testScene("ChessScene", "resources/IsoFlatTile.png");
+	//MainChessScene testScene("ChessScene", "resources/IsoShadedCube.png");
 
 	//Run the program..
 	app.AddScene(&testScene);

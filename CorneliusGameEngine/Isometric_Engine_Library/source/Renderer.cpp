@@ -116,9 +116,9 @@ void Renderer::Render(const std::vector<Entity*>& a_entitiesToRender)
 		if (entity->IsIsometricRenderingEnabled()) {
 			//Do isometric conversion for the entity's screen position.
 			Vector2Int entityPosInt = Vector2Int((int)entity->GetPosition().x, (int)entity->GetPosition().y);
-			Vector2Int ScreenPos = GetScreenPosFromIsometricCoords(entityPosInt) + m_cameraOffset;
-			renderRect.x = ScreenPos.x + (m_isometricTileSize.x / 200); //pos x
-			renderRect.y = ScreenPos.y + (m_isometricTileSize.y / 200); //pos y
+			Vector2Int ScreenPos = GetScreenPosFromIsometricCoords(entityPosInt);
+			renderRect.x = ScreenPos.x; //pos x
+			renderRect.y = ScreenPos.y; //pos y
 			//Use isometric tile size for the width and height to ensure the entity is rendered at the correct size for the isometric perspective.
 			renderRect.w = m_isometricTileSize.x;
 			renderRect.h = m_isometricTileSize.y;
@@ -131,7 +131,7 @@ void Renderer::Render(const std::vector<Entity*>& a_entitiesToRender)
 			renderRect.h = (int)entity->GetSize().y; //height
 		}
 
-		
+
 
 		//Render the entity.
 		SDL_RenderCopy(m_renderer, entityTexture, NULL, &renderRect);
@@ -172,7 +172,7 @@ void Renderer::RenderTilemap(IsometricTilemap* a_tilemapToRender)
 			SDL_SetTextureColorMod(tileTexture, r, g, b);
 
 			//Get the tile information.
-			Vector2Int tileScreenPos = GetScreenPosFromIsometricCoords(Vector2Int(x, y)) + m_cameraOffset;
+			Vector2Int tileScreenPos = GetScreenPosFromIsometricCoords(Vector2Int(x, y));
 			SDL_Rect renderRect;
 			renderRect.x = tileScreenPos.x;
 			renderRect.y = tileScreenPos.y;
@@ -243,41 +243,67 @@ Vector2Int Renderer::GetScreenPosFromIsometricCoords(const Vector2Int& a_isometr
 	int screenY = (a_isometricCoordinate.x * 0.5f * tileHeight) + (a_isometricCoordinate.y * 0.5f * tileHeight);
 
 	// Apply camera offset
-	screenX += m_cameraOffset.x;
-	screenY += m_cameraOffset.y;
+	screenX += (m_cameraOffset.x * 2);
+	screenY += (m_cameraOffset.y * 2);
 
 	return Vector2Int((int)screenX, (int)screenY);
 }
 
+Vector2Int Renderer::GetIsometricCoordsFromScreenPos(const Vector2Int& a_screenPos)
+{
+	// Extract the tile size
+	const int tileWidth = (m_isometricTileSize.x / 2);
+	const int tileHeight = (m_isometricTileSize.y / 2);
+
+	// Remove camera offset
+	int screenX = (a_screenPos.x - m_cameraOffset.x * 2 - tileWidth);
+	int screenY = (a_screenPos.y - m_cameraOffset.y * 2 - tileHeight) - (tileHeight / 4);
+
+	// Add tileWidth to screenX to reverse the subtraction in GetScreenPosFromIsometricCoords
+	screenX += tileWidth;
+
+	// Calculate floating point values for the transformation
+	float fx = static_cast<float>(screenX) / static_cast<float>(tileWidth);
+	float fy = static_cast<float>(screenY) / (0.5f * static_cast<float>(tileHeight));
+
+	// Solve for isoX and isoY
+	float isoX = (fx + fy) / 2.0f;
+	float isoY = (fy - fx) / 2.0f;
+
+	return Vector2Int(static_cast<int>(std::round(isoX)), static_cast<int>(std::round(isoY)));
+}
+
 Vector2Int Renderer::GetIsometricGridPosFromScreenCoords(const Vector2Int& a_screenCoords, bool a_useCamOffset)
 {
-	// Extract the tile size 
-	const int tileWidth = m_isometricTileSize.x;
-	const int halfWidth = tileWidth / 2;
+	//// Extract the tile size 
+	//const int tileWidth = m_isometricTileSize.x;
+	//const int halfWidth = tileWidth / 2;
 
-	const int tileHeight = m_isometricTileSize.y;
-	const int halfHeight = tileHeight / 2;
+	//const int tileHeight = m_isometricTileSize.y;
+	//const int halfHeight = tileHeight / 2;
 
-	// Remove camera offset 
-	int screenX = a_screenCoords.x;
-	if (a_useCamOffset) {
-		screenX -= m_cameraOffset.x * 2;
-	}
-	screenX += halfWidth / 2;
+	//// Remove camera offset 
+	//int screenX = a_screenCoords.x;
+	//if (a_useCamOffset) {
+	//	screenX -= m_cameraOffset.x * 2;
+	//}
+	//screenX += halfWidth / 2;
 
-	int screenY = a_screenCoords.y;
-	if (a_useCamOffset) {
-		screenY -= m_cameraOffset.y * 2;
-	}
-	screenY -= tileHeight;
+	//int screenY = a_screenCoords.y;
+	//if (a_useCamOffset) {
+	//	screenY -= m_cameraOffset.y * 2;
+	//}
+	//screenY -= tileHeight;
 
-	// Calculate isometric coordinates 
-	int isoX = (screenX / halfWidth + 2 * screenY / halfHeight) / 2;
-	isoX += 1;
-	int isoY = (2 * screenY / halfHeight - screenX / halfWidth) / 2;
-	isoY += 1;
+	//// Calculate isometric coordinates 
+	//int isoX = (screenX / halfWidth + 2 * screenY / halfHeight) / 2;
+	//isoX += 1;
+	//int isoY = (2 * screenY / halfHeight - screenX / halfWidth) / 2;
+	//isoY += 1;
 
-	return Vector2Int(isoX, isoY);
+	//return Vector2Int(isoX, isoY);
+
+	return GetIsometricCoordsFromScreenPos(a_screenCoords);
 }
 
 int Renderer::GetMonitorRefreshRate()

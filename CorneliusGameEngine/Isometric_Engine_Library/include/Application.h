@@ -97,6 +97,26 @@ public:
 				}
 			}
 
+			//Should we run at the monitor resolution?
+			char refreshRateInput;
+			std::cout << "Should VSYNC be enabled? \n - This will cap FPS to your refresh rate, else the target FPS will be set as high as possible. - \n(y for yes, n for no): ";
+			while (true) {
+				std::cin >> refreshRateInput;
+				if (refreshRateInput == 'y' || refreshRateInput == 'Y') {
+					USE_VSYNC = true;
+					break;
+				}
+				else if (refreshRateInput == 'n' || refreshRateInput == 'N') {
+					USE_VSYNC = false;
+					break;
+				}
+				else {
+					std::cin.clear();
+					std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+					std::cout << "Invalid input. Please enter 'y' for yes or 'n' for no: ";
+				}
+			}
+
 			//Ensure there is an instance set for the class.
 			//We assign the instance in the constructor so initialisation is kept explicit and not lazy.
 			instance = this;
@@ -112,7 +132,12 @@ public:
 		}
 
 		//Ensure the application windows has been created.
-		StartApplicationWindow(APP_NAME, RUN_AT_MONITOR_RESOLUTION);
+		if (USE_VSYNC) {
+			StartApplicationWindow(APP_NAME, RUN_AT_MONITOR_RESOLUTION, -1);
+		}
+		else {
+			StartApplicationWindow(APP_NAME, RUN_AT_MONITOR_RESOLUTION, 1000000000); // If VSYNC is disabled, set the target FPS to a very high value to effectively remove the FPS cap.
+		}
 	};
 	~Application() { Shutdown(); };
 
@@ -125,7 +150,7 @@ public:
 	void AddScene(Scene* a_newScene) { m_scenes.push_back(a_newScene); }
 	void LoadSceneByName(const std::string& a_sceneName);
 	void LoadSceneByIndex(const int& a_index);
-	Scene* GetActiveScene() { 
+	Scene* GetActiveScene() {
 		return m_activeScene;
 	}
 
@@ -139,6 +164,7 @@ public:
 	int SCREEN_HEIGHT;
 	bool IS_FULLSCREEN;
 	bool RUN_AT_MONITOR_RESOLUTION;
+	bool USE_VSYNC = true;
 
 private:
 	//singleton instance.
@@ -152,7 +178,7 @@ private:
 	Scene* m_activeScene = nullptr;
 
 	//Functions.
-	void StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution);
+	void StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution, int a_targetFPS);
 	void Shutdown();
 
 	//Consts.

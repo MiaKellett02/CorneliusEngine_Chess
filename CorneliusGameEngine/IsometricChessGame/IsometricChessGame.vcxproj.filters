@@ -10,7 +10,6 @@
     <ClCompile Include="source\MainChessScene.cpp" />
     <ClCompile Include="source\ChessBoard.cpp" />
     <ClCompile Include="source\ChessPieceRendererComponent.cpp" />
-    <ClCompile Include="src\MainChessScene.cpp" />
     <ClCompile Include="source\ChessPiece.cpp" />
   </ItemGroup>
   <ItemGroup>

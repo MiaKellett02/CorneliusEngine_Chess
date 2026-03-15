@@ -15,7 +15,7 @@
 Application* Application::instance = nullptr;
 
 //Functions.
-void Application::StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution)
+void Application::StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution, int a_targetFPS = -1)
 {
 	CorneliusEngine::Log("Application setup called.");
 
@@ -29,6 +29,10 @@ void Application::StartApplicationWindow(const std::string& a_appName, bool a_ru
 
 	m_activeScene = nullptr; //On first load the active scene should always be nullptr.
 	m_targetFPS = m_renderer.GetMonitorRefreshRate(); //Target FPS should be VSYNC
+	if (a_targetFPS != -1 && a_targetFPS > 0) {
+		//If a custom target FPS is provided, use that instead of the monitor refresh rate.
+		m_targetFPS = a_targetFPS;
+	}
 
 	//Return exit code of successfull.
 	return;

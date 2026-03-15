@@ -177,7 +177,6 @@
     <ClCompile Include="source\MainChessScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\GameGrid.cpp" />
-    <ClCompile Include="src\MainChessScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\ChessBoard.h" />

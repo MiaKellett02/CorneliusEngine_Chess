@@ -133,21 +133,9 @@ void ChessBoard::UpdateChessBoard(double a_deltaTime)
 	if (selectedPosOne == UNSELECTED_VALUE && selectedPosTwo == UNSELECTED_VALUE) {
 		//Reset the colours of the grid.
 		m_gameGrid.ResetGridColours();
-
-		//Tint the hovered tile a darker grey.
-		if (isValidPosition) {
-			int tileIndex = mouseIsoPos.x + mouseIsoPos.y * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
-			Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint;
-			Colour hoverColour = Colour(originalColour.r / 3, originalColour.g / 3, originalColour.b / 3);
-			m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = hoverColour;
-
-			//Make the chess piece at this position (if there is one) also be tinted to indicate it is being hovered over.
-			if (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
-				pieceAtHoverPos.SetIsHovered(true);
-			}
-		}
 	}
-	else if (selectedPosOne != UNSELECTED_VALUE && selectedPosTwo == UNSELECTED_VALUE) {
+	else if (selectedPosOne != UNSELECTED_VALUE) {
+		m_gameGrid.ResetGridColours();
 		// If the first position is selected, and the second one is not,
 		// tint the piece on the selected tile green, and then tint any tiles that are valid moves green as well to indicate the valid moves for this piece.
 		// Then, tint any tiles that are invalid moves red to indicate they are invalid moves for this piece.
@@ -159,6 +147,7 @@ void ChessBoard::UpdateChessBoard(double a_deltaTime)
 		//Loop over all the tiles on the board and tint them based on whether they are a valid move for this piece or not.
 		Colour redTint = Colour(255, 0, 0);
 		Colour greenTint = Colour(0, 255, 0);
+
 		for (int x = 0; x < 8; x++) {
 			for (int y = 0; y < 8; y++) {
 				Vector2Int currentPos = Vector2Int(x, y);
@@ -172,17 +161,36 @@ void ChessBoard::UpdateChessBoard(double a_deltaTime)
 					}
 				}
 				Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint;
+				Colour newColour;
 				if (isValidMove) {
 					//Valid move, tint green.
-					Colour newColour = Colour((originalColour.r + greenTint.r) / 2, (originalColour.g + greenTint.g) / 2, (originalColour.b + greenTint.b) / 2);
-					m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = newColour;
+					newColour = Colour((originalColour.r + greenTint.r) / 2, (originalColour.g + greenTint.g) / 2, (originalColour.b + greenTint.b) / 2);
 				}
 				else {
 					//Not a valid move, tint red.
-					Colour newColour = Colour((originalColour.r + redTint.r) / 2, (originalColour.g + redTint.g) / 2, (originalColour.b + redTint.b) / 2);
-					m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = newColour;
+					newColour = Colour((originalColour.r + redTint.r) / 2, (originalColour.g + redTint.g) / 2, (originalColour.b + redTint.b) / 2);
 				}
+
+				//Apply the new colour to the tile.
+				m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = newColour;
 			}
+		}
+	}
+
+	//Tint the hovered tile a darker colour.
+	//Get the tile index of the position the mouse is hovering over, so we can tint it if needed.
+	mouseIsoPos = Application::Instance()->GetRenderer().GetIsometricGridPosFromScreenCoords(mousePos, true);
+	int hoverTileIndex = mouseIsoPos.x + mouseIsoPos.y * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
+
+	isValidPosition = m_gameGrid.GetEnvironmentTilemap()->IsValidPosition(mouseIsoPos);
+	if (isValidPosition) {
+		Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[hoverTileIndex].tint;
+		Colour hoverColour = Colour(originalColour.r / 3, originalColour.g / 3, originalColour.b / 3);
+		m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[hoverTileIndex].tint = hoverColour;
+
+		//Make the chess piece at this position (if there is one) also be tinted to indicate it is being hovered over.
+		if (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
+			pieceAtHoverPos.SetIsHovered(true);
 		}
 	}
 }

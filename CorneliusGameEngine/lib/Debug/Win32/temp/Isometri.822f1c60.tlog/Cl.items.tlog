@@ -1,6 +1,7 @@
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Application.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Application.obj
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Component.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Component.obj
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Entity.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Entity.obj
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\InputHandler.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\InputHandler.obj
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Renderer.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Renderer.obj
-D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Scene.cpp;D:\Github\SideProjects\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Scene.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Application.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Application.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Component.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Component.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\AStarPathfinding.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\AStarPathfinding.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Entity.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Entity.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\InputHandler.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\InputHandler.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Renderer.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Renderer.obj
+C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\Isometric_Engine_Library\source\Scene.cpp;C:\DEV\Github\CorneliusGameEngine\CorneliusGameEngine\lib\Debug\Win32\temp\Scene.obj

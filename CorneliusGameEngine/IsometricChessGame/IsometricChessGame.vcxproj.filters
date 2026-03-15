@@ -11,6 +11,7 @@
     <ClCompile Include="source\ChessBoard.cpp" />
     <ClCompile Include="source\ChessPieceRendererComponent.cpp" />
     <ClCompile Include="source\ChessPiece.cpp" />
+    <ClCompile Include="source\ChessPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\GameGrid.h">
@@ -20,6 +21,7 @@
     <ClInclude Include="include\ChessBoard.h" />
     <ClInclude Include="include\ChessPiece.h" />
     <ClInclude Include="include\ChessPieceRendererComponent.h" />
+    <ClInclude Include="include\ChessPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

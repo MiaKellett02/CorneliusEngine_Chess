@@ -55,7 +55,7 @@ public:
 	PieceType& GetPieceType() { return m_pieceType; }
 	bool& GetIsHovered() { return m_isHovered; }
 
-	const std::vector<Vector2Int>& GetAllValidPieceMoves();
+	std::vector<Vector2Int>& GetAllValidPieceMoves();
 
 	//Setters.
 	void SetPieceColour(PieceColour a_pieceColour) { m_pieceColour = a_pieceColour; }

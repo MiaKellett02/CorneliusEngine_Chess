@@ -81,116 +81,79 @@ ChessPiece& ChessBoard::GetPieceAtPosition(int x, int y) {
 	return m_boardState.at(x + (y * boardSizeX));
 }
 
+ChessBoard ChessBoard::GetGameBoardState(const ChessBoard& a_mainBoard)
+{
+	return ChessBoard(a_mainBoard);
+}
+
+bool ChessBoard::MakeGameMove(Vector2Int a_startPos, Vector2Int a_endPos)
+{
+	//Ensure the positions are in bounds of the board.
+	if (a_startPos.x < 0 || a_startPos.x > 7 || a_startPos.y < 0 || a_startPos.y > 7 ||
+		a_endPos.x < 0 || a_endPos.x > 7 || a_endPos.y < 0 || a_endPos.y > 7) {
+		CorneliusEngine::Log("Invalid move: Start or end position is out of bounds.");
+		return false;
+	}
+
+	//Get the piece at the start position and the piece at the end position.
+	ChessPiece& pieceToMove = GetPieceAtPosition(a_startPos.x, a_startPos.y);
+	ChessPiece& targetPiece = GetPieceAtPosition(a_endPos.x, a_endPos.y);
+
+	//Check if there is a piece at the start position, and that the piece belongs to the current player.
+	if (pieceToMove.GetPieceType() == ChessPiece::PieceType::NO_TYPE) {
+		CorneliusEngine::Log("Invalid move: No piece at the start position.");
+		return false;
+	}
+
+	ChessPiece::PieceColour currentPlayerColour = m_isWhitePlayersTurn ? ChessPiece::PieceColour::WHITE : ChessPiece::PieceColour::BLACK;
+	if (pieceToMove.GetPieceColour() != currentPlayerColour) {
+		CorneliusEngine::Log("Invalid move: The piece at the start position does not belong to the current player.");
+		return false;
+	}
+
+	//Check if the move is valid for the piece at the start position.
+	std::vector<Vector2Int> validMoves = pieceToMove.GetAllValidPieceMoves();
+	bool isValidMove = false;
+	for (const Vector2Int& validMove : validMoves) {
+		if (validMove == a_endPos) {
+			isValidMove = true;
+			break;
+		}
+	}
+	if (!isValidMove) {
+		CorneliusEngine::Log("Invalid move: The piece at the start position cannot move to the end position.");
+		return false;
+	}
+
+	//Move the piece to the end position by updating the piece at the end position to be the same as the piece at the start position, and then updating the piece at the start position to be an empty tile.
+	targetPiece.UpdatePiece(pieceToMove.GetPieceColour(), pieceToMove.GetPieceType());
+	pieceToMove.UpdatePiece(ChessPiece::PieceColour::NO_COLOUR, ChessPiece::PieceType::NO_TYPE);
+
+	//After making the move, switch the turn to the other player.
+	m_isWhitePlayersTurn = !m_isWhitePlayersTurn;
+	return true; // Move was successful.
+}
+
 void ChessBoard::UpdateChessBoard(double a_deltaTime)
 {
 	if (currentUpdateTime < UPDATE_INTERVAL) {
 		currentUpdateTime += static_cast<float>(a_deltaTime);
+		//Ensure players are setup.
+		m_whitePlayer.SetIsBlackPlayer(false);
+		m_whitePlayer.SetIsHumanPlayer(true); // Default to white as human player for testing.
+
+		m_blackPlayer.SetIsBlackPlayer(true);
+		m_blackPlayer.SetIsHumanPlayer(true); // have black player be Human for testing before AI logic is implemented.
+
 		return; // Not enough time has passed since the last update, so return early.
 	}
 	currentUpdateTime = 0.0f; // Reset the timer for the next update.
 
-	//Get the position of the mouse and use that to get the isometric coordinate it is hovering over..
-	Vector2Int mousePos = InputHandler::GetMousePosition();
-	Vector2Int mouseIsoPos = Application::Instance()->GetRenderer().GetIsometricGridPosFromScreenCoords(mousePos, true);
-	/*CorneliusEngine::Log(("IsoPos(" + std::to_string(mouseIsoPos.x) + ", " + std::to_string(mouseIsoPos.y) + ")") +
-						 (" MousePos(" + std::to_string(mousePos.x) + ", " + std::to_string(mousePos.y) + ")") +
-						 (" CamOffset(" + std::to_string(Application::Instance()->GetRenderer().GetCameraOffset().x) + ", " + std::to_string(Application::Instance()->GetRenderer().GetCameraOffset().y) + ")"));*/
-
-
-						 //Check mouse button states.
-	bool leftButtonPressed = InputHandler::LeftMouseButtonPressed();
-	bool rightButtonPressed = InputHandler::RightMouseButtonPressed();
-	ChessPiece& pieceAtHoverPos = GetPieceAtPosition(mouseIsoPos.x, mouseIsoPos.y);
-	bool isValidPosition = m_gameGrid.GetEnvironmentTilemap()->IsValidPosition(mouseIsoPos);
-
-	//Find which position is being selected by the player. If the left mouse button is pressed, select the position. If the right mouse button is pressed, clear the selections.
-	if (leftButtonPressed && isValidPosition) {
-		if (selectedPosOne == UNSELECTED_VALUE && (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE)) {
-			CorneliusEngine::Log("Selected Piece on position: (" + std::to_string(mouseIsoPos.x) + ", " + std::to_string(mouseIsoPos.y) + ")");
-			selectedPosOne = mouseIsoPos;
-		}
-		else if (selectedPosTwo == UNSELECTED_VALUE && !(selectedPosTwo == selectedPosOne)) {
-			selectedPosTwo = mouseIsoPos;
-		}
+	//Update the players, which will handle input and any AI logic for making moves.
+	if (m_isWhitePlayersTurn) {
+		m_whitePlayer.Update(UPDATE_INTERVAL, this);
 	}
-	else if (rightButtonPressed) {
-		//Clear the selections
-		selectedPosOne = UNSELECTED_VALUE;
-		selectedPosTwo = UNSELECTED_VALUE;
-	}
-
-	//Loop over all the chess pieces and reset the hover state.
-	for (int x = 0; x < 8; x++) {
-		for (int y = 0; y < 8; y++) {
-			ChessPiece& piece = GetPieceAtPosition(x, y);
-			if (piece.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
-				piece.SetIsHovered(false);
-			}
-		}
-	}
-
-	//Tint the position the mouse is hovering over a dark grey if no position is currently selected.
-	if (selectedPosOne == UNSELECTED_VALUE && selectedPosTwo == UNSELECTED_VALUE) {
-		//Reset the colours of the grid.
-		m_gameGrid.ResetGridColours();
-	}
-	else if (selectedPosOne != UNSELECTED_VALUE) {
-		m_gameGrid.ResetGridColours();
-		// If the first position is selected, and the second one is not,
-		// tint the piece on the selected tile green, and then tint any tiles that are valid moves green as well to indicate the valid moves for this piece.
-		// Then, tint any tiles that are invalid moves red to indicate they are invalid moves for this piece.
-
-		//Get the piece at the selected position & all it's valid moves.
-		ChessPiece& selectedPiece = GetPieceAtPosition(selectedPosOne.x, selectedPosOne.y);
-		const std::vector<Vector2Int>& validMoves = selectedPiece.GetAllValidPieceMoves();
-
-		//Loop over all the tiles on the board and tint them based on whether they are a valid move for this piece or not.
-		Colour redTint = Colour(255, 0, 0);
-		Colour greenTint = Colour(0, 255, 0);
-
-		for (int x = 0; x < 8; x++) {
-			for (int y = 0; y < 8; y++) {
-				Vector2Int currentPos = Vector2Int(x, y);
-				int tileIndex = x + y * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
-				//Check if this position is in the valid moves vector for the selected piece.
-				bool isValidMove = false;
-				for (int i = 0; i < validMoves.size(); i++) {
-					if (validMoves[i] == currentPos) {
-						isValidMove = true;
-						break;
-					}
-				}
-				Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint;
-				Colour newColour;
-				if (isValidMove) {
-					//Valid move, tint green.
-					newColour = Colour((originalColour.r + greenTint.r) / 2, (originalColour.g + greenTint.g) / 2, (originalColour.b + greenTint.b) / 2);
-				}
-				else {
-					//Not a valid move, tint red.
-					newColour = Colour((originalColour.r + redTint.r) / 2, (originalColour.g + redTint.g) / 2, (originalColour.b + redTint.b) / 2);
-				}
-
-				//Apply the new colour to the tile.
-				m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[tileIndex].tint = newColour;
-			}
-		}
-	}
-
-	//Tint the hovered tile a darker colour.
-	//Get the tile index of the position the mouse is hovering over, so we can tint it if needed.
-	mouseIsoPos = Application::Instance()->GetRenderer().GetIsometricGridPosFromScreenCoords(mousePos, true);
-	int hoverTileIndex = mouseIsoPos.x + mouseIsoPos.y * m_gameGrid.GetEnvironmentTilemap()->GetWidth();
-
-	isValidPosition = m_gameGrid.GetEnvironmentTilemap()->IsValidPosition(mouseIsoPos);
-	if (isValidPosition) {
-		Colour originalColour = m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[hoverTileIndex].tint;
-		Colour hoverColour = Colour(originalColour.r / 3, originalColour.g / 3, originalColour.b / 3);
-		m_gameGrid.GetEnvironmentTilemap()->GetTilemapList()[hoverTileIndex].tint = hoverColour;
-
-		//Make the chess piece at this position (if there is one) also be tinted to indicate it is being hovered over.
-		if (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
-			pieceAtHoverPos.SetIsHovered(true);
-		}
+	else {
+		m_blackPlayer.Update(UPDATE_INTERVAL, this);
 	}
 }

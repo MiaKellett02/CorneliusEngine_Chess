@@ -4,7 +4,7 @@
 #include "Vector2.h"
 #include "Logging.h"
 
-const std::vector<Vector2Int>& ChessPiece::GetAllValidPieceMoves()
+std::vector<Vector2Int>& ChessPiece::GetAllValidPieceMoves()
 {
 	static std::vector<Vector2Int> validMoves; // Static vector to store the valid moves for this piece. This is static to avoid having to create a new vector every time this function is called, which can be expensive in terms of performance. The vector will be cleared and repopulated with the valid moves for this piece each time this function is called.
 	validMoves.clear(); // Clear the vector before populating it with the valid moves for this piece.   
@@ -91,7 +91,20 @@ void ChessPiece::CalculateValidMovesForPawn(std::vector<Vector2Int>& validMoves)
 	}
 
 	//Calculate diagonal captures.
-		// TODO CAPTURING.
+	//Check the two diagonally forward positions for an enemy piece that can be captured.
+	Vector2Int diagonalLeft = Vector2Int(m_piecePosition.x - 1, m_piecePosition.y + forwardDirection);
+	ChessPiece& pieceOnDiagonalLeft = m_chessBoard->GetPieceAtPosition(diagonalLeft.x, diagonalLeft.y);	
+	if (pieceOnDiagonalLeft.GetPieceColour() != PieceColour::NO_COLOUR && pieceOnDiagonalLeft.GetPieceColour() != GetPieceColour() && pieceOnDiagonalLeft.GetPieceType() != PieceType::KING) {
+		//If an enemy piece that is not the king is on the diagonal, this is a valid capture move.
+		validMoves.push_back(diagonalLeft);
+	}
+	
+	Vector2Int diagonalRight = Vector2Int(m_piecePosition.x + 1, m_piecePosition.y + forwardDirection);
+	ChessPiece& pieceOnDiagonalRight = m_chessBoard->GetPieceAtPosition(diagonalRight.x, diagonalRight.y);
+	if (pieceOnDiagonalRight.GetPieceColour() != PieceColour::NO_COLOUR && pieceOnDiagonalRight.GetPieceColour() != GetPieceColour() && pieceOnDiagonalRight.GetPieceType() != PieceType::KING) {
+		//If an enemy piece that is not the king is on the diagonal, this is a valid capture move.
+		validMoves.push_back(diagonalRight);
+	}
 }
 
 void ChessPiece::CalculateValidMovesForRook(std::vector<Vector2Int>& validMoves)

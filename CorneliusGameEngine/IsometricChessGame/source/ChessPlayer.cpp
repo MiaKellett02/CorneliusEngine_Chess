@@ -40,6 +40,7 @@ void ChessPlayer::Update(double a_deltaTime, ChessBoard* a_mainChessBoard)
 	}
 	else {
 		//Do AI player logic here.
+		HandleAIPlayerInput(a_deltaTime, a_mainChessBoard);
 	}
 }
 
@@ -180,5 +181,27 @@ void ChessPlayer::HandleHumanPlayerInput(double a_deltaTime, ChessBoard* a_mainC
 		if (pieceAtHoverPos.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
 			pieceAtHoverPos.SetIsHovered(true);
 		}
+	}
+}
+
+void ChessPlayer::HandleAIPlayerInput(double a_deltaTime, ChessBoard* a_mainChessBoard)
+{
+	//Get the valid moves for the current AI player and pick a random one.
+	std::vector<ChessBoard::ChessMove>& validMoves = a_mainChessBoard->GetAllValidMoves();
+	int end = validMoves.size() - 1;
+	int start = 0;
+	int modifier = (end - start + 1) + start;
+	if (modifier <= 0) {
+		modifier = 1; // Ensure the modifier is at least 1 to avoid division by zero in the rand() % modifier expression.
+	}
+	int randomIndex = rand() % modifier;
+
+	if (validMoves.size() > 0) {
+		//Set the cooldown timer for the AI move after making a move to prevent it from making moves too quickly.
+		ChessBoard::ChessMove& moveToMake = validMoves[randomIndex];
+		a_mainChessBoard->MakeGameMove(moveToMake.startPos, moveToMake.endPos);
+	}
+	else {
+		CorneliusEngine::Log("No valid moves available for AI player.");
 	}
 }

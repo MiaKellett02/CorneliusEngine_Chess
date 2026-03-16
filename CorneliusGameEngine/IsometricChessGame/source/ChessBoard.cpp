@@ -113,6 +113,38 @@ ChessPiece& ChessBoard::GetPieceAtPosition(int x, int y) {
 	return m_boardState.at(x + (y * boardSizeX));
 }
 
+std::vector<ChessBoard::ChessMove>& ChessBoard::GetAllValidMoves()
+{
+	static std::vector<ChessMove> validMoves; // Static vector to store the valid moves for this piece. This is static to avoid having to create a new vector every time this function is called, which can be expensive in terms of performance. The vector will be cleared and repopulated with the valid moves for this piece each time this function is called.
+	validMoves.clear(); // Clear the vector before populating it with the valid moves for this piece.   
+
+	//Get the current player colour based on whose turn it is.
+	ChessPiece::PieceColour currentPlayerColour = m_isWhitePlayersTurn ? ChessPiece::PieceColour::WHITE : ChessPiece::PieceColour::BLACK;
+
+	//Do the calculations.
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
+			//Get the piece at this position on the board and find it's valid moves if it's an actual piece and the same colour as the current player colour.
+			ChessPiece& piece = GetPieceAtPosition(x, y);
+			if (piece.GetPieceColour() == currentPlayerColour && piece.GetPieceType() != ChessPiece::PieceType::NO_TYPE) {
+				std::vector<Vector2Int>& pieceValidMoves = piece.GetAllValidPieceMoves();
+				//Add the valid moves for this piece to the overall valid moves vector for the current player.
+				Vector2Int piecePosition = Vector2Int(x, y);
+				for (int i = 0; i < pieceValidMoves.size(); i++) {
+					// Create a ChessMove struct for this move and add it to the valid moves vector.
+					ChessMove move;
+					move.startPos = piecePosition;
+					move.endPos = pieceValidMoves[i];
+					validMoves.push_back(move);
+				}
+			}
+		}
+	}
+
+	//Return the result.
+	return validMoves;
+}
+
 ChessBoard ChessBoard::GetGameBoardState(const ChessBoard& a_mainBoard)
 {
 	return ChessBoard(a_mainBoard);
@@ -182,7 +214,8 @@ void ChessBoard::UpdateChessBoard(double a_deltaTime)
 		m_whitePlayer.SetIsHumanPlayer(true); // Default to white as human player for testing.
 
 		m_blackPlayer.SetIsBlackPlayer(true);
-		m_blackPlayer.SetIsHumanPlayer(true); // have black player be Human for testing before AI logic is implemented.
+		//m_blackPlayer.SetIsHumanPlayer(true); // have black player be Human for testing before AI logic is implemented.
+		m_blackPlayer.SetIsHumanPlayer(false); // make it ai sometimes.
 
 		return; // Not enough time has passed since the last update, so return early.
 	}

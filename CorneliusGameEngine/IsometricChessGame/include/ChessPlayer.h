@@ -55,4 +55,5 @@ private:
 
 	//Private Functions.
 	void HandleHumanPlayerInput(double a_deltaTime, ChessBoard* a_mainChessBoard);
+	void HandleAIPlayerInput(double a_deltaTime, ChessBoard* a_mainChessBoard);
 };

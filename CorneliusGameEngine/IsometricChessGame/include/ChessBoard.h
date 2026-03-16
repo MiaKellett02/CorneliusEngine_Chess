@@ -9,6 +9,7 @@
 #include "ChessPiece.h"
 #include "GameGrid.h"
 #include "ChessPlayer.h"
+#include "Vector2.h"
 
 //Library includes.
 #include <vector>
@@ -39,6 +40,12 @@ public:
 	//Public functions.
 	ChessPiece& GetPieceAtPosition(int x, int y);
 	GameGrid& GetGameGrid() { return m_gameGrid; }
+
+	struct ChessMove {
+		Vector2Int startPos;
+		Vector2Int endPos;
+	};
+	std::vector<ChessMove>& GetAllValidMoves(); // Will return a vector of all valid moves for the current player. This will be used for things like highlighting valid moves for a selected piece, and for AI logic to determine which moves are valid for the current player.
 
 	ChessBoard GetGameBoardState(const ChessBoard& a_mainBoard); // Will return a copy of the chess board state, which can be used for things like pathfinding and AI logic without affecting the actual game state.
 	bool MakeGameMove(Vector2Int a_startPos, Vector2Int a_endPos); // Will move a piece from the start position to the end position, if the move is valid. This will also handle any logic related to making a move, such as capturing pieces, checking for check/checkmate, and updating the game state accordingly.

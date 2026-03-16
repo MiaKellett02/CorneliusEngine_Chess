@@ -29,17 +29,49 @@ void ChessBoard::Initialize(const std::string& a_defaultTileSprite) {
 	for (int y = 0; y < boardSizeY; y++) {
 		for (int x = 0; x < boardSizeX; x++) {
 			//Spawn the pawns.
-			if (y == 1) {
+			if (y == 0) {
+				//Spawn a black rook, knight, bishop, queen, and king for the first row.
+				if (x == 0 || x == 7) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::ROOK);
+				}
+				else if (x == 1 || x == 6) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::KNIGHT);
+				}
+				else if (x == 2 || x == 5) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::BISHOP);
+				}
+				else if (x == 3) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::QUEEN);
+				}
+				else if (x == 4) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::KING);
+				}
+			}
+			else if (y == 1) {
 				//Spawn a black pawn for the second row.
 				m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::BLACK, ChessPiece::PieceType::PAWN);
+			}
+			else if (y == boardSizeY - 1) {
+				// Spawn a white rook, knight, bishop, queen, and king for the eighth row.
+				if (x == 0 || x == 7) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::ROOK);
+				}
+				else if (x == 1 || x == 6) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::KNIGHT);
+				}
+				else if (x == 2 || x == 5) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::BISHOP);
+				}
+				else if (x == 3) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::QUEEN);
+				}
+				else if (x == 4) {
+					m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::KING);
+				}
 			}
 			else if (y == boardSizeY - 2) {
 				//Spawn a white pawn on the 7th row.
 				m_boardState.at(x + (y * boardSizeX)).UpdatePiece(ChessPiece::PieceColour::WHITE, ChessPiece::PieceType::PAWN);
-			}
-
-			if (x == 1 && y == 6) {
-				int a = 0;
 			}
 
 			//Spawn an entity for this piece and add it to the scene.
@@ -47,7 +79,7 @@ void ChessBoard::Initialize(const std::string& a_defaultTileSprite) {
 			Scene* scene = Application::Instance()->GetActiveScene();
 
 			//Size is set to (-1, -1) as the renderer will use the isometric tile size for rendering, so the entity's size does not need to be set.
-			Entity* newEntity = new Entity(nullptr, Vector2(x, y), Vector2(-1, -1), "ChessPieceRenderer", "Player", "resources/WhitePawn.png");
+			Entity* newEntity = new Entity(nullptr, Vector2(x, y), Vector2(-1, -1), "ChessPieceRenderer", "Player", "resources/IsoShadedCube.png"); // Default to cube so we can tell if the render component breaks.
 			newEntity->DisableRendering(); // Disable rendering for this entity by default, as it will be enabled by the ChessPieceRendererComponent when it detects there is a piece to render.
 			newEntity->EnableIsometricRendering(); // Enable isometric rendering for this entity, as it will be rendered in an isometric perspective.
 
@@ -127,6 +159,13 @@ bool ChessBoard::MakeGameMove(Vector2Int a_startPos, Vector2Int a_endPos)
 
 	//Move the piece to the end position by updating the piece at the end position to be the same as the piece at the start position, and then updating the piece at the start position to be an empty tile.
 	targetPiece.UpdatePiece(pieceToMove.GetPieceColour(), pieceToMove.GetPieceType());
+	if ((a_endPos.y == 0 || a_endPos.y == 7) && targetPiece.GetPieceType() == ChessPiece::PieceType::PAWN) {
+		// If a pawn gets to the end of the board, promote it to a queen. 
+		// In the future, we can add logic to allow the player to choose what piece they want to promote to, but for now we will just promote to a queen.
+		targetPiece.UpdatePiece(targetPiece.GetPieceColour(), ChessPiece::PieceType::QUEEN);
+	}
+
+
 	pieceToMove.UpdatePiece(ChessPiece::PieceColour::NO_COLOUR, ChessPiece::PieceType::NO_TYPE);
 
 	//After making the move, switch the turn to the other player.

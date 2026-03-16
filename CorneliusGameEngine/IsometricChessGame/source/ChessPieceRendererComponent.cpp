@@ -40,33 +40,83 @@ void ChessPieceRendererComponent::Update(double a_deltaTime)
 	ChessPiece& entityPiece = m_chessBoard->GetPieceAtPosition(ownerEntity->GetPosition().x, ownerEntity->GetPosition().y);
 
 	switch (entityPiece.GetPieceType()) {
-	case ChessPiece::PieceType::NO_TYPE: {
-		ownerEntity->DisableRendering(); // If there is no piece, disable rendering for this entity.
-		break;
-	}
-	case ChessPiece::PieceType::PAWN: {
-		if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
-			ownerEntity->ChangeTexture("resources/WhitePawn.png");
+		case ChessPiece::PieceType::NO_TYPE: {
+			ownerEntity->DisableRendering(); // If there is no piece, disable rendering for this entity.
+			break;
 		}
-		else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
-			ownerEntity->ChangeTexture("resources/BlackPawn.png");
-		}
+		case ChessPiece::PieceType::PAWN: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhitePawn.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackPawn.png");
+			}
 
-		if (entityPiece.GetIsHovered()) {
-			ownerEntity->SetEntityTint(Colour(175, 175, 175)); // If the piece is being hovered over, tint it a light grey to indicate this.
-		}
-		else {
-			ownerEntity->SetEntityTint(Colour(255, 255, 255)); // If the piece is not being hovered over, ensure it is not tinted.
-		}
+			if (entityPiece.GetIsHovered()) {
+				ownerEntity->SetEntityTint(Colour(175, 175, 175)); // If the piece is being hovered over, tint it a light grey to indicate this.
+			}
+			else {
+				ownerEntity->SetEntityTint(Colour(255, 255, 255)); // If the piece is not being hovered over, ensure it is not tinted.
+			}
 
 
-		ownerEntity->EnableRendering();
-		break;
-	}
-	default: {
-		// For other piece types, we can add more cases here to set the appropriate texture based on the piece type and colour.
-		CorneliusEngine::LogWarning("ChessPieceRendererComponent does not have a case for this piece type. No texture will be set for this piece.");
-		break;
-	}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		case ChessPiece::PieceType::ROOK: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhiteRook.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackRook.png");
+			}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		case ChessPiece::PieceType::KNIGHT: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhiteKnight.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackKnight.png");
+			}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		case ChessPiece::PieceType::BISHOP: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhiteBishop.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackBishop.png");
+			}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		case ChessPiece::PieceType::QUEEN: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhiteQueen.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackQueen.png");
+			}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		case ChessPiece::PieceType::KING: {
+			if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::WHITE) {
+				ownerEntity->ChangeTexture("resources/WhiteKing.png");
+			}
+			else if (entityPiece.GetPieceColour() == ChessPiece::PieceColour::BLACK) {
+				ownerEntity->ChangeTexture("resources/BlackKing.png");
+			}
+			ownerEntity->EnableRendering();
+			break;
+		}
+		default: {
+			// For other piece types, we can add more cases here to set the appropriate texture based on the piece type and colour.
+			CorneliusEngine::LogWarning("ChessPieceRendererComponent does not have a case for this piece type. No texture will be set for this piece.");
+			break;
+		}
 	}
 }

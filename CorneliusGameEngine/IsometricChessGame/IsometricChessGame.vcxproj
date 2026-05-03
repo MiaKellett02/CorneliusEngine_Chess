@@ -176,6 +176,7 @@
     <ClCompile Include="source\ChessBoard.cpp" />
     <ClCompile Include="source\ChessPlayer.cpp" />
     <ClCompile Include="source\MainChessScene.cpp" />
+    <ClCompile Include="source\MainMenuScene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="source\GameGrid.cpp" />
   </ItemGroup>
@@ -186,6 +187,7 @@
     <ClInclude Include="include\ChessPlayer.h" />
     <ClInclude Include="include\GameGrid.h" />
     <ClInclude Include="include\MainChessScene.h" />
+    <ClInclude Include="include\MainMenuScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

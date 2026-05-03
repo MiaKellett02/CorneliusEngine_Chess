@@ -1,5 +1,6 @@
 //Project includes.
 #include "Application.h"
+#include "MainMenuScene.h"
 #include "MainChessScene.h"
 
 //Functions.
@@ -14,11 +15,13 @@ int main(int argc, char* argv)
 	app.GetRenderer().SetCameraOffset(cameraPos);
 
 	//Create the desired scenes.
-	MainChessScene testScene("ChessScene", "resources/IsoFlatTile.png");
-	//MainChessScene testScene("ChessScene", "resources/IsoShadedCube.png");
+	MainMenuScene mainMenu("MainMenu", "resources/IsoFlatTile.png");
+	MainChessScene chessScene("ChessScene", "resources/IsoFlatTile.png");
+	//MainChessScene chessScene("ChessScene", "resources/IsoShadedCube.png");
 
-	//Run the program..
-	app.AddScene(&testScene);
+	//Register scenes - main menu loads first, chess scene is loaded on player input.
+	app.AddScene(&mainMenu);
+	app.AddScene(&chessScene);
 
 	app.RunApplication();
 

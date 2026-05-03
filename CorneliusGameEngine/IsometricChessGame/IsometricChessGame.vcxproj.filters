@@ -8,6 +8,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\MainChessScene.cpp" />
+    <ClCompile Include="source\MainMenuScene.cpp" />
     <ClCompile Include="source\ChessBoard.cpp" />
     <ClCompile Include="source\ChessPieceRendererComponent.cpp" />
     <ClCompile Include="source\ChessPiece.cpp" />
@@ -18,6 +19,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\MainChessScene.h" />
+    <ClInclude Include="include\MainMenuScene.h" />
     <ClInclude Include="include\ChessBoard.h" />
     <ClInclude Include="include\ChessPiece.h" />
     <ClInclude Include="include\ChessPieceRendererComponent.h" />

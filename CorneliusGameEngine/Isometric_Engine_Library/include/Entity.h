@@ -1,6 +1,7 @@
 #pragma once
 //Project includes.
 #include "Vector2.h"
+#include "Colour.h"
 
 //Library includes.
 #include <string>
@@ -18,6 +19,7 @@ public:
 
 	//Main Entity functions.
 	void Update(double a_deltaTime);
+	void ChangeTexture(std::string a_newTextureFilepath);
 
 	//Getters and setters.
 	std::string GetName() { return m_name; }
@@ -37,16 +39,29 @@ public:
 
 	void AddChild(Entity* a_child) { m_children.push_back(a_child); }
 
+	void EnableRendering() { m_renderingEnabled = true; }
+	void DisableRendering() { m_renderingEnabled = false; }
+	const bool& IsRenderingEnabled() { return m_renderingEnabled; }
+	
+	void EnableIsometricRendering() { m_isometricRenderingEnabled = true; }
+	void DisableIsometricRendering() { m_isometricRenderingEnabled = false; }
+	const bool& IsIsometricRenderingEnabled() { return m_isometricRenderingEnabled; }
+
+	Colour& GetEntityTint() { return m_entityTint; }
+	void SetEntityTint(Colour a_newTint) { m_entityTint = a_newTint; }
 private:
 	//Entity components.
 	std::vector<Component*> m_components;
 	Entity* m_parent;
 	std::vector<Entity*> m_children;
+	bool m_renderingEnabled = true; // Rendering enabled by default.
+	bool m_isometricRenderingEnabled = false; // Isometric rendering disabled by default.
 
 	//Entity descriptive variables.
 	std::string m_name;
 	std::string m_tag;
 	std::string m_texID;
+	Colour m_entityTint = Colour(255,255,255);
 
 	//Entity world info.
 	Vector2 m_position;

@@ -337,3 +337,9 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+CorneliusGameEngine/IsometricGameProject/bin/Win32/Debug/temp/SamplePr.E68B543F.tlog/Cl.items.tlog
+CorneliusGameEngine/IsometricGameProject/bin/Win32/Debug/temp/IsometricUnitMovementTestScene.obj
+CorneliusGameEngine/IsometricGameProject/bin/Win32/Debug/temp/GameGrid.obj
+CorneliusGameEngine/IsometricChessGame/bin/Win32/Debug/temp/ChessPlayer.obj
+CorneliusGameEngine/IsometricChessGame/bin/x64/Debug/temp/Isometri.F1E1E3B4.tlog/unsuccessfulbuild
+/CorneliusGameEngine/lib/Debug/x64/temp

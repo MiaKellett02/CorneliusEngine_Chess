@@ -11,19 +11,6 @@
 #include <assert.h>
 
 //Function definitions.
-Scene::Scene(std::string a_sceneName, int a_tileMapWidth, int a_tileMapHeight, const std::string& a_defaultTile)
-{
-	m_sceneName = a_sceneName;
-	
-	m_sceneTiles = IsometricTilemap(a_tileMapWidth, a_tileMapHeight);
-	m_sceneTiles.AddTile(a_defaultTile, Application::Instance()->GetRenderer());
-}
-
-Scene::~Scene()
-{
-
-}
-
 void Scene::SetupScene()
 {
 	m_sceneShutdown = false;
@@ -47,6 +34,17 @@ void Scene::ShutdownScene()
 	//destroy all entities in the scene.
 	DestroyAllEntities();
 	m_sceneShutdown = true;
+}
+
+void Scene::RemoveTilemapByName(const std::string& a_tilemapName) 
+{ 
+	m_sceneTilemaps.erase(
+		std::remove_if(m_sceneTilemaps.begin(), m_sceneTilemaps.end(), 
+			[&a_tilemapName](IsometricTilemap* tilemap) 
+			{ 
+				return tilemap->GetTilemapName() == a_tilemapName; 
+			}), 
+		m_sceneTilemaps.end());
 }
 
 Entity* Scene::GetEntityByName(const std::string& a_name)

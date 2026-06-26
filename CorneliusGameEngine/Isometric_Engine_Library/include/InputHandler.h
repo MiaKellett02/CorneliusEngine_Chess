@@ -1,5 +1,13 @@
 #pragma once
+//Project includes.
+#include <Vector2.h>
 
-namespace InputHandler {
+//Class Declaration.
+class InputHandler {
+public:
+	
 
-}
+	static Vector2Int GetMousePosition();
+	static bool LeftMouseButtonPressed();
+	static bool RightMouseButtonPressed();
+};

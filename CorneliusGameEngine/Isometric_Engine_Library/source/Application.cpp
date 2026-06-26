@@ -15,7 +15,7 @@
 Application* Application::instance = nullptr;
 
 //Functions.
-void Application::SetupApplication(const std::string& a_appName, bool a_runAtMonitorResolution)
+void Application::StartApplicationWindow(const std::string& a_appName, bool a_runAtMonitorResolution, int a_targetFPS = -1)
 {
 	CorneliusEngine::Log("Application setup called.");
 
@@ -29,6 +29,10 @@ void Application::SetupApplication(const std::string& a_appName, bool a_runAtMon
 
 	m_activeScene = nullptr; //On first load the active scene should always be nullptr.
 	m_targetFPS = m_renderer.GetMonitorRefreshRate(); //Target FPS should be VSYNC
+	if (a_targetFPS != -1 && a_targetFPS > 0) {
+		//If a custom target FPS is provided, use that instead of the monitor refresh rate.
+		m_targetFPS = a_targetFPS;
+	}
 
 	//Return exit code of successfull.
 	return;
@@ -36,6 +40,9 @@ void Application::SetupApplication(const std::string& a_appName, bool a_runAtMon
 
 void Application::RunApplication()
 {
+	//Ensure the application windows has been created.
+	//StartApplicationWindow(APP_NAME, RUN_AT_MONITOR_RESOLUTION);
+
 	//If the active scene is null then load the first one in the list of scenes.
 	if (m_activeScene == nullptr) {
 		assert(m_scenes.size() > 0); //Ensure there are always existing scenes.
@@ -69,35 +76,7 @@ void Application::RunApplication()
 				break;
 			}
 
-			//if (event.type == SDL_KEYDOWN) {
-				Vector2Int totalMovement = Vector2Int(0,0);
-				if (event.key.keysym.sym == SDLK_a) {
-					//CorneliusEngine::Log("A key pressed");
-					//Move the camera left.
-					Vector2Int leftMovement = Vector2Int(10, 0);
-					totalMovement = totalMovement + leftMovement;
-				}
-				if (event.key.keysym.sym == SDLK_d) {
-					//CorneliusEngine::Log("D key pressed");
-					//Move the camera right.
-					Vector2Int rightMovement = Vector2Int(-10, 0);
-					totalMovement = totalMovement + rightMovement;
-				}
-				if (event.key.keysym.sym == SDLK_w) {
-					//CorneliusEngine::Log("W key pressed");
-					//Move the camera up.
-					Vector2Int upMovement = Vector2Int(0, 10);
-					totalMovement = totalMovement + upMovement;
-				}
-				if (event.key.keysym.sym == SDLK_s) {
-					//CorneliusEngine::Log("S key pressed");
-					//Move the camera down.
-					Vector2Int downMovement = Vector2Int(0, -10);
-					totalMovement = totalMovement + downMovement;
-				}
-
-				m_renderer.MoveCamera(totalMovement);
-			//}
+			//TODO: IMPUT HANDLING. We should pass the events to the input handler here.
 		}
 
 		//Update the game.
@@ -109,7 +88,11 @@ void Application::RunApplication()
 		m_renderer.ClearScreen();
 
 		//Render the scene tilemap.
-		m_renderer.RenderTilemap(m_activeScene->GetSceneTilemap());
+		std::vector<IsometricTilemap*>& tilemapsToRender = m_activeScene->GetSceneTileMaps();
+		for (int i = 0; i < tilemapsToRender.size(); i++) {
+			IsometricTilemap* currentTilemap = tilemapsToRender[i];
+			m_renderer.RenderTilemap(currentTilemap);
+		}
 
 		//Render  scene entities.
 		std::vector<Entity*>& sceneEntities = m_activeScene->GetAllEntities();

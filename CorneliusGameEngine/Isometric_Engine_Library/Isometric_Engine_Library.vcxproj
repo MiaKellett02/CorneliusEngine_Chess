@@ -105,6 +105,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SDL2\include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -129,6 +130,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SDL2\include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -153,6 +155,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SDL2\include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -176,6 +179,7 @@
       </PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(SolutionDir)\External\SDL2\include;$(ProjectDir)include</AdditionalIncludeDirectories>
       <PrecompiledHeaderOutputFile />
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -190,18 +194,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Application.h" />
+    <ClInclude Include="include\Colour.h" />
     <ClInclude Include="include\Component.h" />
+    <ClInclude Include="include\AStarPathfinding.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\InputHandler.h" />
     <ClInclude Include="include\IsometricTilemap.h" />
     <ClInclude Include="include\Logging.h" />
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\Vector2.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Component.cpp" />
+    <ClCompile Include="source\AStarPathfinding.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\InputHandler.cpp" />
     <ClCompile Include="source\Renderer.cpp" />

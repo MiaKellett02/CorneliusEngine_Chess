@@ -26,18 +26,27 @@ public:
 	Vector2Int Initialise(const std::string& a_appName, int a_screenWidth, int a_screenHeight, bool fullScreen, bool a_runAtMonitorResolution);
 	void ClearScreen();
 	void Render(const std::vector<Entity*>& a_entitiesToRender);
-	void RenderTilemap(IsometricTilemap& a_tilemapToRender);
+	void RenderTilemap(IsometricTilemap* a_tilemapToRender);
 	void Shutdown();
 
 	//Functions to handle multiple textures.
 	void CreateTexture(std::string a_textureID, std::string a_filepath);
 
 	//Camera handling functions.
-	void SetCameraOffset(Vector2Int& a_newPos) { m_cameraOffset = a_newPos; }
-	void MoveCamera(Vector2Int& a_moveAmount) { m_cameraOffset = m_cameraOffset + a_moveAmount; }
+	void SetCameraOffset(Vector2Int& a_newPos) {
+		m_cameraOffset = a_newPos;
+		//m_cameraOffset = Vector2Int(0, 0);
+	}
+	void MoveCamera(Vector2Int& a_moveAmount) {
+		m_cameraOffset = m_cameraOffset + a_moveAmount;
+		//m_cameraOffset = Vector2Int(0, 0);
+	}
 
 	//Renderer Utility Functions
-	Vector2Int GetScreenPosFromIsometricCoords(const Vector2& a_isometricCoordinate);
+	Vector2Int GetScreenPosFromIsometricCoords(const Vector2Int& a_isometricCoordinate);
+	Vector2Int GetIsometricCoordsFromScreenPos(const Vector2Int& a_screenPos);
+	Vector2Int GetIsometricGridPosFromScreenCoords(const Vector2Int& a_screenCoords, bool a_useCamOffset);
+	Vector2Int GetCameraOffset() { return m_cameraOffset; }
 	int GetMonitorRefreshRate();
 
 private:

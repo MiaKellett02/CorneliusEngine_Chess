@@ -14,9 +14,13 @@ class Entity;
 class Scene {
 public:
 	//Constructor and destructor.
-	Scene(std::string a_sceneName, int a_tileMapWidth, int a_tileMapHeight, const std::string& a_defaultTile);
+	Scene(std::string a_sceneName) {
+		m_sceneName = a_sceneName;
 
-	~Scene();
+		m_sceneTilemaps = std::vector<IsometricTilemap*>(); // Ensure the tilemap array is instantiated.
+	};
+
+	~Scene() {};
 
 	//Standard Scene Functions.
 	virtual void SetupScene();
@@ -24,12 +28,16 @@ public:
 	virtual void ShutdownScene();
 
 	//Tilemap handling functions.
-	IsometricTilemap& GetSceneTilemap() { return m_sceneTiles; }
+	std::vector<IsometricTilemap*>& GetSceneTileMaps() { return m_sceneTilemaps; }
+	void AddNewTilemapToSceneRenderList(IsometricTilemap* a_tilemap) { m_sceneTilemaps.push_back(a_tilemap); }
+	void RemoveTilemapByName(const std::string& a_tilemapName);
 
 	//Entity handling functions.
 	Entity* GetEntityByName(const std::string& a_name);
 	std::vector<Entity*> GetEntitiesWithTag(const std::string& a_tag);
-	std::vector<Entity*>& GetAllEntities() { return m_gameEntities; }
+	std::vector<Entity*>& GetAllEntities() { 
+		return m_gameEntities;
+	}
 	void DestroyEntity(Entity* a_entityToDestroy);
 	void DestroyAllEntities();
 
@@ -42,9 +50,12 @@ protected:
 	bool m_sceneShutdown = false;
 
 	//Scene variables.
-	IsometricTilemap m_sceneTiles;
+	std::vector<IsometricTilemap*> m_sceneTilemaps; // Give a scene the ability to render multiple tilemaps.
+	// Items in the vector are pointers as this tilemap should only point to 
+	// tilemaps owned by other components of the application. Each entry
+	// in this vector is not owned by this vector.
 
-	//Game entity variables.
+//Game entity variables.
 	std::vector<Entity*> m_gameEntities;
 
 	//Private Functions.

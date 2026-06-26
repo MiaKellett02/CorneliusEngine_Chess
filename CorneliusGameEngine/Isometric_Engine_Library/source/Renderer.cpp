@@ -46,7 +46,8 @@ Vector2Int Renderer::Initialise(const std::string& a_appName, int a_screenWidth,
 		desiredHeight = displayMode.h;
 		CorneliusEngine::Log("Screen dimensions (from renderer init): (" + std::to_string(desiredWidth) + "," + std::to_string(desiredHeight) + ")");
 	}
-	m_isometricTileSize = Vector2Int(desiredHeight / 10, desiredHeight / 10);
+	int tileMult = 6;
+	m_isometricTileSize = Vector2Int(desiredHeight / tileMult, desiredHeight / tileMult);
 
 	//Initialise image handling library.
 	if (IMG_Init(IMG_INIT_PNG) == 0) {
@@ -59,7 +60,12 @@ Vector2Int Renderer::Initialise(const std::string& a_appName, int a_screenWidth,
 		m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_FULLSCREEN);
 	}
 	else {
-		m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_OPENGL);
+		if (a_runAtMonitorResolution) {
+			m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_BORDERLESS);
+		}
+		else {
+			m_window = SDL_CreateWindow(a_appName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, desiredWidth, desiredHeight, SDL_WINDOW_OPENGL);
+		}
 	}
 
 	//Ensure the window was correctly initialised.
@@ -93,16 +99,39 @@ void Renderer::Render(const std::vector<Entity*>& a_entitiesToRender)
 	//Ensure all entities are copied to the renderer.
 	for (int i = 0; i < a_entitiesToRender.size(); i++) {
 		Entity* entity = a_entitiesToRender[i]; //Get the entity.
-
-		//Construct the rect for it to be rendered in.
-		SDL_Rect renderRect;
-		renderRect.x = (int)entity->GetScreenPos().x + m_cameraOffset.x; //pos x
-		renderRect.y = (int)entity->GetScreenPos().y + m_cameraOffset.y; //pos y
-		renderRect.w = (int)entity->GetSize().x; //width
-		renderRect.h = (int)entity->GetSize().y; //height
+		if (!entity->IsRenderingEnabled()) {
+			continue; //Skip this entity if it is not enabled for rendering.
+		}
 
 		//Get the texture.
 		SDL_Texture* entityTexture = m_textureMap[entity->GetTexID()];
+		Colour& entityTint = entity->GetEntityTint();
+		Uint8 r = entityTint.r;
+		Uint8 g = entityTint.g;
+		Uint8 b = entityTint.b;
+		SDL_SetTextureColorMod(entityTexture, r, g, b);
+
+		//Construct the rect for it to be rendered in.
+		SDL_Rect renderRect;
+		if (entity->IsIsometricRenderingEnabled()) {
+			//Do isometric conversion for the entity's screen position.
+			Vector2Int entityPosInt = Vector2Int((int)entity->GetPosition().x, (int)entity->GetPosition().y);
+			Vector2Int ScreenPos = GetScreenPosFromIsometricCoords(entityPosInt);
+			renderRect.x = ScreenPos.x; //pos x
+			renderRect.y = ScreenPos.y; //pos y
+			//Use isometric tile size for the width and height to ensure the entity is rendered at the correct size for the isometric perspective.
+			renderRect.w = m_isometricTileSize.x;
+			renderRect.h = m_isometricTileSize.y;
+		}
+		else {
+			//Use the entity's screen position as is.
+			renderRect.x = (int)entity->GetScreenPos().x + m_cameraOffset.x; //pos x
+			renderRect.y = (int)entity->GetScreenPos().y + m_cameraOffset.y; //pos y
+			renderRect.w = (int)entity->GetSize().x; //width
+			renderRect.h = (int)entity->GetSize().y; //height
+		}
+
+
 
 		//Render the entity.
 		SDL_RenderCopy(m_renderer, entityTexture, NULL, &renderRect);
@@ -112,33 +141,43 @@ void Renderer::Render(const std::vector<Entity*>& a_entitiesToRender)
 	SDL_RenderPresent(m_renderer);
 }
 
-void Renderer::RenderTilemap(IsometricTilemap& a_tilemapToRender)
+void Renderer::RenderTilemap(IsometricTilemap* a_tilemapToRender)
 {
 	//Setup variables.
-	const std::vector<int>& tilesToRender = a_tilemapToRender.GetTilemapList();
-	const int WIDTH = a_tilemapToRender.GetWidth();
-	const int HEIGHT = a_tilemapToRender.GetHeight();
+	using TileType = IsometricTilemap::TileType;
+	using Tile = IsometricTilemap::Tile;
+	const std::vector<Tile>& tilesToRender = a_tilemapToRender->GetTilemapList();
+	const int WIDTH = a_tilemapToRender->GetWidth();
+	const int HEIGHT = a_tilemapToRender->GetHeight();
 	const int AREA = WIDTH * HEIGHT;
 
 	//Render.
 	for (int y = 0; y < HEIGHT; y++) {
 		for (int x = 0; x < WIDTH; x++) {
+			//Get the Tile data.
+			int tileAccessIndex = x + y * WIDTH;
+			if (tileAccessIndex < 0 || tileAccessIndex >= AREA) {
+				CorneliusEngine::LogError("Tile access index is out of bounds on tilemap (inside renderer.cpp 'RenderTilemap').");
+			}
+
+			Tile currentTile = tilesToRender[tileAccessIndex];
+			TileType& currentTileType = a_tilemapToRender->GetTileDataFromIndex(currentTile.tileTypeIndex);
+			const std::string& tileTextureID = currentTileType.sprite;
+			SDL_Texture* tileTexture = m_textureMap[tileTextureID];
+
+			//Tint the tile to be the correct colour.
+			Uint8 r = currentTile.tint.r;
+			Uint8 g = currentTile.tint.g;
+			Uint8 b = currentTile.tint.b;
+			SDL_SetTextureColorMod(tileTexture, r, g, b);
+
 			//Get the tile information.
-			Vector2Int tileScreenPos = GetScreenPosFromIsometricCoords(Vector2(x, y)) + m_cameraOffset;
+			Vector2Int tileScreenPos = GetScreenPosFromIsometricCoords(Vector2Int(x, y));
 			SDL_Rect renderRect;
 			renderRect.x = tileScreenPos.x;
 			renderRect.y = tileScreenPos.y;
 			renderRect.w = m_isometricTileSize.x;
 			renderRect.h = m_isometricTileSize.y;
-
-			//Get the texture.
-			int tileAccessIndex = x + y * WIDTH;
-			if (tileAccessIndex < 0 || tileAccessIndex >= AREA) {
-				CorneliusEngine::LogError("Tile access index is out of bounds on tilemap (inside renderer.cpp 'RenderTilemap').");
-			}
-			int textureIndex = tilesToRender[tileAccessIndex];
-			const std::string& tileTextureID = a_tilemapToRender.GetTileTextureFromIndex(textureIndex);
-			SDL_Texture* tileTexture = m_textureMap[tileTextureID];
 
 			//Render the tile.
 			SDL_RenderCopy(m_renderer, tileTexture, NULL, &renderRect);
@@ -191,23 +230,80 @@ void Renderer::CreateTexture(std::string a_textureID, std::string a_filepath)
 	SDL_FreeSurface(imgSurface);
 }
 
-Vector2Int Renderer::GetScreenPosFromIsometricCoords(const Vector2& a_isometricCoordinate)
+Vector2Int Renderer::GetScreenPosFromIsometricCoords(const Vector2Int& a_isometricCoordinate)
 {
 	// Extract the tile size
-	const int tileWidth = m_isometricTileSize.x / 2;
-	const int tileHeight = m_isometricTileSize.y / 2;
+	const int tileWidth = (m_isometricTileSize.x / 2);
+	const int tileHeight = (m_isometricTileSize.y / 2);
 
 	// Calculate screen X and Y coordinates
 	Application* instance = Application::Instance();
 	int screenX = (a_isometricCoordinate.x * tileWidth) + (a_isometricCoordinate.y * -1 * tileWidth);
 	screenX -= tileWidth;
-	int screenY = (int)(a_isometricCoordinate.x * 0.5f * tileHeight) + (int)(a_isometricCoordinate.y * 0.5f * tileHeight);
+	int screenY = (a_isometricCoordinate.x * 0.5f * tileHeight) + (a_isometricCoordinate.y * 0.5f * tileHeight);
 
 	// Apply camera offset
-	screenX += m_cameraOffset.x;
-	screenY += m_cameraOffset.y;
+	screenX += (m_cameraOffset.x * 2);
+	screenY += (m_cameraOffset.y * 2);
 
-	return Vector2Int(screenX, screenY);
+	return Vector2Int((int)screenX, (int)screenY);
+}
+
+Vector2Int Renderer::GetIsometricCoordsFromScreenPos(const Vector2Int& a_screenPos)
+{
+	// Extract the tile size
+	const int tileWidth = (m_isometricTileSize.x / 2);
+	const int tileHeight = (m_isometricTileSize.y / 2);
+
+	// Remove camera offset
+	int screenX = (a_screenPos.x - m_cameraOffset.x * 2 - tileWidth);
+	int screenY = (a_screenPos.y - m_cameraOffset.y * 2 - tileHeight) - (tileHeight / 4);
+
+	// Add tileWidth to screenX to reverse the subtraction in GetScreenPosFromIsometricCoords
+	screenX += tileWidth;
+
+	// Calculate floating point values for the transformation
+	float fx = static_cast<float>(screenX) / static_cast<float>(tileWidth);
+	float fy = static_cast<float>(screenY) / (0.5f * static_cast<float>(tileHeight));
+
+	// Solve for isoX and isoY
+	float isoX = (fx + fy) / 2.0f;
+	float isoY = (fy - fx) / 2.0f;
+
+	return Vector2Int(static_cast<int>(std::round(isoX)), static_cast<int>(std::round(isoY)));
+}
+
+Vector2Int Renderer::GetIsometricGridPosFromScreenCoords(const Vector2Int& a_screenCoords, bool a_useCamOffset)
+{
+	//// Extract the tile size 
+	//const int tileWidth = m_isometricTileSize.x;
+	//const int halfWidth = tileWidth / 2;
+
+	//const int tileHeight = m_isometricTileSize.y;
+	//const int halfHeight = tileHeight / 2;
+
+	//// Remove camera offset 
+	//int screenX = a_screenCoords.x;
+	//if (a_useCamOffset) {
+	//	screenX -= m_cameraOffset.x * 2;
+	//}
+	//screenX += halfWidth / 2;
+
+	//int screenY = a_screenCoords.y;
+	//if (a_useCamOffset) {
+	//	screenY -= m_cameraOffset.y * 2;
+	//}
+	//screenY -= tileHeight;
+
+	//// Calculate isometric coordinates 
+	//int isoX = (screenX / halfWidth + 2 * screenY / halfHeight) / 2;
+	//isoX += 1;
+	//int isoY = (2 * screenY / halfHeight - screenX / halfWidth) / 2;
+	//isoY += 1;
+
+	//return Vector2Int(isoX, isoY);
+
+	return GetIsometricCoordsFromScreenPos(a_screenCoords);
 }
 
 int Renderer::GetMonitorRefreshRate()

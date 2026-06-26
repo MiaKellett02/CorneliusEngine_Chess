@@ -100,8 +100,16 @@ struct Vector2Int {
 		return std::round(std::sqrt((float)(x * x + y * y)));
 	}
 
+	float MagnitudeFloat() {
+		return std::sqrt((float)(x * x + y * y));
+	}
+
 	int SqrMagnitude() {
 		return x * x + y * y;
+	}
+
+	float SqrMagnitudeFloat() {
+		return (float)(x * x + y * y);
 	}
 
 	//Operator overrides.
@@ -127,5 +135,9 @@ struct Vector2Int {
 
 	Vector2Int operator-(Vector2Int other) const {
 		return Vector2Int(x - other.x, y - other.y);
+	}
+
+	bool operator==(const Vector2Int& other) const {
+		return x == other.x && y == other.y;
 	}
 };

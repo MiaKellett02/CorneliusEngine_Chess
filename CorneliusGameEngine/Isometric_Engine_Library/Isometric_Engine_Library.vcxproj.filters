@@ -19,6 +19,9 @@
     <ClCompile Include="source\InputHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\AStarPathfinding.cpp">
+      <Filter>Source Files\PathfindingSource</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Application.h">
@@ -28,9 +31,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Renderer.h">
@@ -48,6 +48,18 @@
     <ClInclude Include="include\InputHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\Colour.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AStarPathfinding.h">
+      <Filter>Header Files\PathfindingInclude</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Logging.h">
+      <Filter>Header Files\DebugInclues</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Timer.h">
+      <Filter>Header Files\DebugInclues</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -55,6 +67,15 @@
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{14f102b0-a322-4440-be43-b5878e7d6f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\PathfindingInclude">
+      <UniqueIdentifier>{5387d87f-02e3-47ea-9c6e-11dd45ddcbb4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PathfindingSource">
+      <UniqueIdentifier>{1b36b696-f47f-41c7-b3f9-cbf948598e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DebugInclues">
+      <UniqueIdentifier>{da7746f8-cadf-4bc5-a40f-d62fb07de1a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

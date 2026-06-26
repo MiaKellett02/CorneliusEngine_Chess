@@ -1,9 +1,9 @@
 # Cornelius Game Engine
 
-## This is a basic 2D Game engine developed to help improve my C++ Technical Skills and lower level programming knowledge.
+## This is a basic 2D/Isometric Game engine developed to help improve my C++ Technical Skills and lower level programming knowledge.
 
 ### Description
-A basic 2D game engine that will focus on creating a framework to make it as easy as possible to create 2D games. This will be used as research for me to learn how to make a good game engine framework before moving onto 3D.
+A basic 2D/Isometric Game engine  that will focus on creating a framework to make it as easy as possible to create 2D/Isometric games. This will be used as research for me to learn how to make a good game engine framework before moving onto 3D.
 
 ### Technologies Used (List may expand as project is developed.):
 All external libraries used are included in a dedicate "ExternalDependencies" folder.
@@ -14,20 +14,20 @@ All external libraries used are included in a dedicate "ExternalDependencies" fo
 https://docs.google.com/document/d/1ms8ovwWcb1dTRgAjilfISpnSTy8yPO_m2SWJwLhE6II/edit?usp=sharing
 
 ## Visual Studio Projects contained within this repository.
-### 2D_Engine_Library Project
+### Isometric_Engine_Library
  - The engine framework project contains all the generic functionality that any game or simulation might require to be made.
  - This project builds into a static library that allows any projects using the engine to access the function definitions of all project header files.
 
-### ArmySimulation_MiaKellett
- - This is an example project that uses the engine framework to create a basic army simulation of 2 different armies that battle to try and destroy the other side.
+### IsometricGameProject
+ - This is the example project that I will use to develop an Isometric game in.
  - If creating your own simulation/game using the engine, look at this project to see how you can use the engine.
 
 ## How to install/run/use this project.
 ### Installation and setup instructions.
  1. Clone the repository to your machine.
  2. Open the Visual Studio 2022 Solution Named "CorneliusGameEngine.sln".
- 3. Set the "ArmySimulation_MiaKellett" project as the startup project.
- 4. Ensure the "CorneluisGameEngineFramework" project is set as a dependency of the sandbox project. (This project builds the engine library that the sandbox relies on.)
+ 3. Set the "IsometricGameProject" project as the startup project.
+ 4. Ensure the "Isometric_Engine_Library" project is set as a dependency of the sandbox project. (This project builds the engine library that the sandbox relies on.)
 
 ### How to run the project.
  1. Build the "CorneliusGameEngine" Solution. The engine will compile into a static library (.lib) file you can find in the solution directory's 'lib' followed by configuration and platform subdirectory. The example executable project will compile into the solution' directory of 'bin' followed by the configuration and platform once again.
